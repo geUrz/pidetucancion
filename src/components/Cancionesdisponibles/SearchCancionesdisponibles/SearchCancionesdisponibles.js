@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Input } from 'semantic-ui-react';
-import { ListaDeCancionesSearch } from '../ListaDeCancionesSearch';
+import { CancionesdisponiblesSearch } from '../CancionesdisponiblesSearch';
 import { FaTimesCircle } from 'react-icons/fa';
-import styles from './SearchListaDeCanciones.module.css';
+import styles from './SearchCancionesdisponibles.module.css';
 
-export function SearchListaDeCanciones(props) {
+export function SearchCancionesdisponibles(props) {
 
   const {user, reload, onReload, onResults, onOpenCloseSearch, onToastSuccessMod} = props
 
@@ -59,7 +59,7 @@ export function SearchListaDeCanciones(props) {
         {error && <p>{error}</p>}
         {listadecanciones.length > 0 && (
           <div className={styles.resultsContainer}>
-            <ListaDeCancionesSearch user={user} listadecanciones={listadecanciones} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
+            <CancionesdisponiblesSearch user={user} listadecanciones={listadecanciones} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
           </div>
         )}
       </div>

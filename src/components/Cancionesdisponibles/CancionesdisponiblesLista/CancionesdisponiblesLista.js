@@ -3,11 +3,11 @@ import { ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
 import { BiMicrophone } from 'react-icons/bi'
 import { BasicModal } from '@/layouts'
-import { ListaDeCancionesDetalles } from '../ListaDeCancionesDetalles'
+import { CancionesdisponiblesDetalles, ListaDeCancionesDetalles } from '../CancionesdisponiblesDetalles'
 import { getValueOrDefault } from '@/helpers'
-import styles from './ListaDeCanciones.module.css'
+import styles from './CancionesdisponiblesLista.module.css'
 
-export function ListaDeCanciones(props) {
+export function CancionesdisponiblesLista(props) {
 
   const { user, reload, onReload, listadecanciones, onToastSuccess, onToastSuccessMod, onToastSuccessDel } = props
 
@@ -71,7 +71,7 @@ export function ListaDeCanciones(props) {
       )}
 
       <BasicModal key={listadecancionesSeleccionado?.id}  title='agregar a la lista' show={showDetalles} onClose={onCloseDetalles}>
-        <ListaDeCancionesDetalles user={user} reload={reload} onReload={onReload} listadecancion={listadecancionesSeleccionado} onCloseDetalles={onCloseDetalles} onToastSuccess={onToastSuccess} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
+        <CancionesdisponiblesDetalles user={user} reload={reload} onReload={onReload} listadecancion={listadecancionesSeleccionado} onCloseDetalles={onCloseDetalles} onToastSuccess={onToastSuccess} onToastSuccessMod={onToastSuccessMod} onToastSuccessDel={onToastSuccessDel} />
       </BasicModal>
 
     </>

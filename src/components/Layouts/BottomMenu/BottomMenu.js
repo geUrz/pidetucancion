@@ -31,7 +31,7 @@ export function BottomMenu() {
         <Link href='/' className={styles.tab}>
           <div>
             <FaFileAlt />
-            <h1>Lista de <br />canciones</h1>
+            <h1>Canciones <br />disponibles</h1>
           </div>
         </Link>
         <Link href='/cancionesenfila' className={styles.tab}>

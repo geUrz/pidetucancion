@@ -2,12 +2,12 @@ import { map, size } from 'lodash'
 import { ListEmpty, Loading } from '@/components/Layouts'
 import { BasicModal } from '@/layouts'
 import { useState } from 'react'
-import styles from './ListaDeCancionesSearch.module.css'
-import { ListaDeCancionesDetalles } from '../ListaDeCancionesDetalles'
+import { CancionesdisponiblesDetalles } from '../CancionesdisponiblesDetalles'
 import { BiMicrophone } from 'react-icons/bi'
 import { getValueOrDefault } from '@/helpers'
+import styles from './CancionesdisponiblesSearch.module.css'
 
-export function ListaDeCancionesSearch(props) {
+export function CancionesdisponiblesSearch(props) {
 
   const { user, reload, onReload, listadecanciones, onToastSuccessMod } = props
 
@@ -62,7 +62,7 @@ export function ListaDeCancionesSearch(props) {
 
       <BasicModal title='detalles de la canción' show={showDetalles} onClose={onCloseDetalles}>
         {listadecancionSeleccionada && (
-          <ListaDeCancionesDetalles
+          <CancionesdisponiblesDetalles
             user={user}
             reload={reload}
             onReload={onReload}

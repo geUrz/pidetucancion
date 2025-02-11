@@ -3,11 +3,11 @@ import { Add, Loading, Title, ToastDelete, ToastSuccess } from '@/components/Lay
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useAuth } from '@/contexts/AuthContext'
-import styles from './listadecanciones.module.css'
-import { ListaDeCanciones, ListaDeCancionesForm, ListaDeCancionesSearch, SearchListaDeCanciones } from '@/components/ListaDeCanciones'
+import { CancionesdisponiblesForm, CancionesdisponiblesLista, CancionesdisponiblesSearch, SearchCancionesdisponibles } from '@/components/Cancionesdisponibles'
 import { FaSearch } from 'react-icons/fa'
+import styles from './cancionesdisponibles.module.css'
 
-export default function Listadecanciones() {
+export default function Cancionesdisponibles() {
 
   const { user, loading } = useAuth()
 
@@ -85,9 +85,9 @@ export default function Listadecanciones() {
           ''
         ) : (
           <div className={styles.searchMain}>
-            <SearchListaDeCanciones user={user} onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
+            <SearchCancionesdisponibles user={user} onResults={setResultados} reload={reload} onReload={onReload} onToastSuccessMod={onToastSuccessMod} onOpenCloseSearch={onOpenCloseSearch} />
             {resultados.length > 0 && (
-              <ListaDeCancionesSearch visitas={resultados} reload={reload} onReload={onReload} />
+              <CancionesdisponiblesSearch visitas={resultados} reload={reload} onReload={onReload} />
             )}
           </div>
         )}
@@ -107,10 +107,10 @@ export default function Listadecanciones() {
           <Add onOpenClose={onOpenCloseForm} /> : null
         }
 
-        <ListaDeCanciones user={user} loading={loading} reload={reload} onReload={onReload} listadecanciones={listadecanciones} setListadecanciones={setListadecanciones}  onToastSuccessMod={onToastSuccessMod} onToastSuccess={onToastSuccess} onToastSuccessDel={onToastSuccessDel} />
+        <CancionesdisponiblesLista user={user} loading={loading} reload={reload} onReload={onReload} listadecanciones={listadecanciones} setListadecanciones={setListadecanciones}  onToastSuccessMod={onToastSuccessMod} onToastSuccess={onToastSuccess} onToastSuccessDel={onToastSuccessDel} />
 
         <BasicModal title='crear canción' show={openCloseForm} onClose={onOpenCloseForm}>
-          <ListaDeCancionesForm reload={reload} onReload={onReload} onToastSuccess={onToastSuccess} onCloseForm={onOpenCloseForm} />
+          <CancionesdisponiblesForm reload={reload} onReload={onReload} onToastSuccess={onToastSuccess} onCloseForm={onOpenCloseForm} />
         </BasicModal>
 
       </BasicLayout>

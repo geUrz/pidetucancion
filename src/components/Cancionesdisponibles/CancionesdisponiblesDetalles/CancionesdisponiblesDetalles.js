@@ -2,14 +2,14 @@ import { FaCheck, FaEdit, FaTimes, FaTrash } from 'react-icons/fa'
 import { IconClose, Confirm } from '@/components/Layouts'
 import { useEffect, useState } from 'react'
 import { BasicModal } from '@/layouts'
-import { ListaDeCancionesEditForm } from '../ListaDeCancionesEditForm'
+import { CancionesdisponiblesEditForm, ListaDeCancionesEditForm } from '../CancionesdisponiblesEditForm'
 import axios from 'axios'
 import { getValueOrDefault } from '@/helpers'
 import { CancionesenfilaForm } from '@/components/Cancionesenfila'
-import styles from './ListaDeCancionesDetalles.module.css'
 import { CancionDonar } from '@/components/CancionDonar'
+import styles from './CancionesdisponiblesDetalles.module.css'
 
-export function ListaDeCancionesDetalles(props) {
+export function CancionesdisponiblesDetalles(props) {
 
   const { user, reload, onReload, listadecancion, onCloseDetalles, onCloseAndReOpenModal, onToastSuccess, onToastSuccessMod, onToastSuccessDel } = props
 
@@ -95,7 +95,7 @@ export function ListaDeCancionesDetalles(props) {
       </div>
 
       <BasicModal key={listadecancion?.id} title='modificar canción' show={showEdit} onClose={onOpenCloseEdit}>
-        <ListaDeCancionesEditForm reload={reload} onReload={onReload} cancionData={cancionData} onOpenCloseEdit={onOpenCloseEdit} onCloseAndReOpenModal={onCloseAndReOpenModal} onToastSuccessMod={onToastSuccessMod} actualizarCancion={actualizarCancion} />
+        <CancionesdisponiblesEditForm reload={reload} onReload={onReload} cancionData={cancionData} onOpenCloseEdit={onOpenCloseEdit} onCloseAndReOpenModal={onCloseAndReOpenModal} onToastSuccessMod={onToastSuccessMod} actualizarCancion={actualizarCancion} />
       </BasicModal>
 
       <BasicModal show={showDonar} onClose={onOpenCloseDonar}>

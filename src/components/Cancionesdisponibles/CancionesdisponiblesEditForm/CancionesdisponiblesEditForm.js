@@ -2,9 +2,9 @@ import { IconClose } from '@/components/Layouts'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { Button, Form, FormField, FormGroup, Input, Label, Message } from 'semantic-ui-react'
-import styles from './ListaDeCancionesEditForm.module.css'
+import styles from './CancionesdisponiblesEditForm.module.css'
 
-export function ListaDeCancionesEditForm(props) {
+export function CancionesdisponiblesEditForm(props) {
 
   const { reload, onReload, cancionData, onOpenCloseEdit, actualizarCancion,onToastSuccessMod } = props
 
