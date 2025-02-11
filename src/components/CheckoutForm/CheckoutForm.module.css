@@ -1,4 +1,4 @@
-.main{
+.mainCheck{
   width: 100%;
   height: auto;
   display: flex;
@@ -7,10 +7,10 @@
   justify-content: center;
 }
 
-.main h1{
-  font-size: 14px;
+.mainCheck h1{
+  font-size: 14px !important;
   text-align: center;
-  color: var(--clrGR1);
+  color: var(--clrGR1) !important;
 }
 
 .StripeElement {

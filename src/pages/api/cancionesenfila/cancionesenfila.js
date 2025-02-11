@@ -7,7 +7,7 @@ export default async function handler(req, res) {
         if (id) {
             // Obtener un cliente por ID
             try {
-                const [rows] = await connection.query('SELECT id, cancion, nombre, mensaje, estado, createdAt FROM cancionesenfila WHERE id = ?', [id])
+                const [rows] = await connection.query('SELECT id, cancion, nombre, mensaje, createdAt FROM cancionesenfila WHERE id = ?', [id])
 
                 if (rows.length === 0) {
                     /* return res.status(404).json({ error: 'Cliente no encontrado' }); */
@@ -30,7 +30,6 @@ export default async function handler(req, res) {
                             cancion, 
                             nombre,
                             mensaje,
-                            estado,
                             createdAt
                         FROM cancionesenfila
                         WHERE 
@@ -49,7 +48,7 @@ export default async function handler(req, res) {
 
             // Obtener todos los cancionesenfila
             try {
-                const [rows] = await connection.query('SELECT id, cancion, nombre, mensaje, estado, createdAt FROM cancionesenfila ORDER BY createdAt ASC');
+                const [rows] = await connection.query('SELECT id, cancion, nombre, mensaje, createdAt FROM cancionesenfila ORDER BY createdAt ASC');
                 res.status(200).json(rows)
             } catch (error) {
                 res.status(500).json({ error: error.message })
@@ -57,12 +56,12 @@ export default async function handler(req, res) {
         
     } else if (req.method === 'POST') {
         try {
-            const { cancion, nombre, mensaje, estado } = req.body
+            const { cancion, nombre, mensaje } = req.body
             if (!cancion ) {
                 return res.status(400).json({ error: 'Todos los datos son obligatorios' })
             }
 
-            const [result] = await connection.query('INSERT INTO cancionesenfila (cancion, nombre, mensaje, estado) VALUES (?, ?, ?, ?)', [cancion, nombre, mensaje, estado])
+            const [result] = await connection.query('INSERT INTO cancionesenfila (cancion, nombre, mensaje) VALUES (?, ?, ?)', [cancion, nombre, mensaje])
             const newClient = { id: result.insertId }
             res.status(201).json(newClient)
         } catch (error) {
@@ -73,14 +72,14 @@ export default async function handler(req, res) {
             return res.status(400).json({ error: 'ID de la canción es obligatorio' })
         }
 
-        const { cancion, nombre, mensaje, estado } = req.body
+        const { cancion, nombre, mensaje } = req.body
 
         if (!cancion) {
             return res.status(400).json({ error: 'Todos los datos son obligatorios' })
         }
 
         try {
-            const [result] = await connection.query('UPDATE cancionesenfila SET cancion = ?, nombre = ?, mensaje = ?, estado = ? WHERE id = ?', [cancion, nombre, mensaje, estado, id])
+            const [result] = await connection.query('UPDATE cancionesenfila SET cancion = ?, nombre = ?, mensaje = ? WHERE id = ?', [cancion, nombre, mensaje, id])
 
             if (result.affectedRows === 0) {
                 return res.status(404).json({ error: 'Canción no encontrada' })

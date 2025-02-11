@@ -3,7 +3,7 @@ import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import styles from './CheckoutForm.module.css';
 import { Button, Message } from 'semantic-ui-react';
 
-const CheckoutForm = ({ clientSecret }) => {
+const CheckoutForm = ({ clientSecret, handleDonarYCrearCancion }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
@@ -18,12 +18,15 @@ const CheckoutForm = ({ clientSecret }) => {
 
     setIsProcessing(true);
 
+    handleDonarYCrearCancion()
+
     const cardElement = elements.getElement(CardElement);
 
     const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
       payment_method: {
         card: cardElement,
       },
+
     });
 
     setIsProcessing(false);
@@ -39,7 +42,7 @@ const CheckoutForm = ({ clientSecret }) => {
 
   return (
 
-    <div className={styles.main}>
+    <div className={styles.mainCheck}>
       <h1>Datos de tu tarjeta de débito/crédito</h1>
       
       <CardElement id="card" className={styles.StripeElement} />

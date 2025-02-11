@@ -99,7 +99,7 @@ export function CancionesdisponiblesDetalles(props) {
       </BasicModal>
 
       <BasicModal show={showDonar} onClose={onOpenCloseDonar}>
-        <CancionDonar onOpenCloseDonar={onOpenCloseDonar} />
+        <CancionDonar onOpenCloseDonar={onOpenCloseDonar} cancionData={cancionData} onCloseDetalles={onCloseDetalles} />
       </BasicModal>
 
       <Confirm

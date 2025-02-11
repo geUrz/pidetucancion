@@ -5,12 +5,13 @@ import { useEffect, useState } from 'react';
 import styles from './CancionDonar.module.css';
 import { Message } from 'semantic-ui-react';
 import { IconClose } from '../Layouts';
+import axios from 'axios';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 export function CancionDonar(props) {
 
-  const { onOpenCloseDonar } = props
+  const { cancionData, onOpenCloseDonar, onCloseDetalles } = props;
 
   const [clientSecret, setClientSecret] = useState('');
   const [amount, setAmount] = useState(''); // Manejamos el monto como string
@@ -87,20 +88,43 @@ export function CancionDonar(props) {
     if (amount !== '' && parseFloat(amount.replace('$', '').trim()) >= 10) {
       createPaymentIntent();
     }
-  }, [amount])
+  }, [amount]);
+
+  // Función para crear la canción en el backend después de la donación
+  const crearCancion = async () => {
+    try {
+      const response = await axios.post('/api/cancionesenfila/cancionesenfila', {
+        cancion: cancionData.cancion,
+        cantante: cancionData.cantante,
+        // otros campos que quieras enviar para la canción
+      });
+
+      onOpenCloseDonar()
+      onCloseDetalles()
+    } catch (error) {
+      console.error('Error al crear la canción:', error);
+    }
+  };
+
+  const handleDonarYCrearCancion = async () => {
+    if (amount && parseFloat(amount.replace('$', '').trim()) >= 10) {
+      // Realizamos la donación primero (lógica de Stripe)
+      // Luego creamos la canción
+      await crearCancion();
+    } else {
+      console.error('Monto no válido para la donación');
+    }
+  };
 
   return (
     <>
-
       <IconClose onOpenClose={onOpenCloseDonar} />
 
       <div className={styles.main}>
         <h1>¿ Deseas hacer una donación ?</h1>
         <h2>¡ Ingresa una cantidad aquí !</h2>
 
-        <div
-          className={styles.amount}
-        >
+        <div className={styles.amount}>
           <input
             type="text"
             value={amount}
@@ -123,14 +147,12 @@ export function CancionDonar(props) {
 
         {clientSecret && (
           <Elements stripe={stripePromise}>
-            <CheckoutForm clientSecret={clientSecret} />
+            <CheckoutForm clientSecret={clientSecret} handleDonarYCrearCancion={handleDonarYCrearCancion} />
           </Elements>
         )}
 
-        <h3 onClick={onOpenCloseDonar}>No deseo donar, solo agregar la canción</h3>
-
+        <h3 onClick={crearCancion}>No deseo donar, solo agregar la canción</h3>
       </div>
-
     </>
   );
 }
