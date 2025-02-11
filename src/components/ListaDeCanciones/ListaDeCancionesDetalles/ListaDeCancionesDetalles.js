@@ -11,7 +11,7 @@ import { CancionDonar } from '@/components/CancionDonar'
 
 export function ListaDeCancionesDetalles(props) {
 
-  const { user, reload, onReload, listadecancion, onCloseDetalles, onCloseAndReOpenModal, onToastSuccess, onToastSuccessMod, toastSuccessDel } = props
+  const { user, reload, onReload, listadecancion, onCloseDetalles, onCloseAndReOpenModal, onToastSuccess, onToastSuccessMod, onToastSuccessDel } = props
 
   const [showEdit, setShowEdit] = useState(false)
 
@@ -30,7 +30,7 @@ export function ListaDeCancionesDetalles(props) {
       try {
         await axios.delete(`/api/listadecanciones/listadecanciones?id=${listadecancion.id}`)
         onReload()
-        toastSuccessDel()
+        onToastSuccessDel()
         onCloseDetalles()
       } catch (error) {
         console.error('Error al eliminar la canción:', error)

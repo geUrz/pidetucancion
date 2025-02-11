@@ -7,7 +7,7 @@ import styles from './CancionesenfilaDetalles.module.css'
 
 export function CancionesenfilaDetalles(props) {
 
-  const { user, reload, onReload, cancionenfila, onCloseDetalles, toastSuccessDel, handleToggleMic, micState } = props
+  const { user, reload, onReload, cancionenfila, onCloseDetalles, onToastSuccessDel, handleToggleMic, micState } = props
 
   const [showConfirmDel, setShowConfirmDel] = useState(false)
 
@@ -25,9 +25,9 @@ export function CancionesenfilaDetalles(props) {
   const handleDeleteCliente = async () => {
     if (cancionenfila?.id) {
       try {
-        await axios.delete(`/api/listadecanciones/listadecanciones?id=${cancionenfila.id}`)
+        await axios.delete(`/api/cancionesenfila/cancionesenfila?id=${cancionenfila.id}`)
         onReload()
-        toastSuccessDel()
+        onToastSuccessDel()
         onCloseDetalles()
       } catch (error) {
         console.error('Error al eliminar la canción:', error)
