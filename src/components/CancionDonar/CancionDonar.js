@@ -1,54 +1,136 @@
-import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
-import { IconClose } from '../Layouts'
-import CheckoutForm from '../CheckoutForm/CheckoutForm'
-import { useEffect, useState } from 'react'
-import styles from './CancionDonar.module.css'
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import CheckoutForm from '../CheckoutForm/CheckoutForm';
+import { useEffect, useState } from 'react';
+import styles from './CancionDonar.module.css';
+import { Message } from 'semantic-ui-react';
+import { IconClose } from '../Layouts';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-
 export function CancionDonar(props) {
 
-  const {onOpenCloseDonar} = props
+  const { onOpenCloseDonar } = props
 
   const [clientSecret, setClientSecret] = useState('');
-  
+  const [amount, setAmount] = useState(''); // Manejamos el monto como string
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleAmountChange = (e) => {
+    let value = e.target.value;
+
+    // Si el campo está vacío, simplemente establecemos el valor como vacío
+    if (value === '') {
+      setAmount('');
+      setError('');
+      return;
+    }
+
+    // Validar si el valor contiene solo números (y punto decimal para valores flotantes)
+    const validAmount = /^[0-9]*\.?[0-9]*$/.test(value.replace('$', ''));
+
+    // Si el valor no es válido, no actualizar el estado
+    if (!validAmount) {
+      return;
+    }
+
+    // Si el valor contiene solo números y no tiene el signo $, lo agregamos automáticamente
+    if (value !== '' && !value.startsWith('$')) {
+      value = '$' + value;
+    }
+
+    // Validamos si el monto no es menor a 10
+    if (value !== '' && parseFloat(value.replace('$', '').trim()) < 10) {
+      setError('El monto mínimo es de $10.00 MXN');
+    } else {
+      setError('');
+    }
+
+    setAmount(value); // Actualizamos el valor del monto
+  };
+
+  // Función para crear el PaymentIntent cuando el monto cambie
   useEffect(() => {
     const createPaymentIntent = async () => {
-      const response = await fetch('/api/create-payment-intent', {
-        method: 'POST',
-        body: JSON.stringify({ amount: 5000 }), // Monto en centavos (50.00 USD)
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      if (amount === '' || parseFloat(amount.replace('$', '').trim()) < 10) {
+        return; // No hacer nada si el monto es inválido
+      }
 
-      const data = await response.json();
-      setClientSecret(data.clientSecret);
+      setIsSubmitting(true);
+      setError(''); // Limpiamos el error si el monto es válido
+
+      try {
+        const response = await fetch('/api/create-payment-intent', {
+          method: 'POST',
+          body: JSON.stringify({ amount: parseFloat(amount.replace('$', '').trim()) * 100 }), // Convertimos a centavos
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Error al crear el PaymentIntent');
+        }
+
+        const data = await response.json();
+        setClientSecret(data.clientSecret); // Establecemos el clientSecret para pasarlo al CheckoutForm
+      } catch (error) {
+        console.error(error);
+        setError('Hubo un problema al procesar tu pago');
+      } finally {
+        setIsSubmitting(false);
+      }
     };
 
-    createPaymentIntent();
-  }, []);
+    // Solo intentamos crear el PaymentIntent si el monto es válido
+    if (amount !== '' && parseFloat(amount.replace('$', '').trim()) >= 10) {
+      createPaymentIntent();
+    }
+  }, [amount])
 
   return (
-    
     <>
 
       <IconClose onOpenClose={onOpenCloseDonar} />
 
       <div className={styles.main}>
-      <h1>DONAR</h1>
+        <h1>¿ Deseas hacer una donación ?</h1>
+        <h2>¡ Ingresa una cantidad aquí !</h2>
 
-      <h1>Pago</h1>
-      {clientSecret && (
-        <Elements stripe={stripePromise}>
-          <CheckoutForm clientSecret={clientSecret} />
-        </Elements>
-      )}
+        <div
+          className={styles.amount}
+        >
+          <input
+            type="text"
+            value={amount}
+            onChange={handleAmountChange}
+            placeholder="$0.00"
+            style={{
+              backgroundColor: 'transparent',
+              color: 'azure',
+              border: 'none',
+              fontSize: '40px',
+              fontWeight: 'bold',
+              textAlign: 'center',
+              width: '100%',
+              outline: 'none',
+            }}
+          />
+        </div>
+
+        {error && <Message>{error}</Message>}
+
+        {clientSecret && (
+          <Elements stripe={stripePromise}>
+            <CheckoutForm clientSecret={clientSecret} />
+          </Elements>
+        )}
+
+        <h3 onClick={onOpenCloseDonar}>No deseo donar, solo agregar la canción</h3>
+
       </div>
 
     </>
-
-  )
+  );
 }

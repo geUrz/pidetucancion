@@ -78,7 +78,7 @@ export function CancionesenfilaForm(props) {
             </div>
           </FormField>
         </FormGroup>
-        <Button primary onClick={crearCancion}>Agregar</Button>
+        <Button primary onClick={onOpenCloseDonar}>Agregar</Button>
       </Form>
 
     </>

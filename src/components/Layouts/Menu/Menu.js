@@ -43,7 +43,7 @@ export function Menu() {
         <Link href='/'>
           <h1>Pide tu canción</h1>
         </Link>
-        {keyCode ?
+        {true ?
           <div className={styles.iconUser}>
             <Link href='/join/signin'>
               <FaUser />
