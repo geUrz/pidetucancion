@@ -1,4 +1,3 @@
-import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 import { BasicLayout, BasicModal } from '@/layouts'
 import { Add, Loading, Title, ToastDelete, ToastSuccess } from '@/components/Layouts'
 import { useEffect, useState } from 'react'

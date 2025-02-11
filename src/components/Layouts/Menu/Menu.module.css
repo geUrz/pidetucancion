@@ -16,3 +16,12 @@
   cursor: pointer;
 }
 
+.iconUser{
+  position: absolute;
+  top: 20px;
+  right: 18px;
+}
+
+.iconUser svg, .iconUser path{
+  font-size: 20px;
+}

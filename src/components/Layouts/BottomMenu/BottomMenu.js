@@ -23,39 +23,10 @@ export function BottomMenu() {
         window.removeEventListener('keydown', handleKeyCode)
       }
     }, [])
-  
-    const gestureAreaRef = useRef(null)
-  
-    const handleTouchStart = (e) => {
-      e.currentTarget.touchStartTime = e.timeStamp
-    };
-  
-    const handleTouchEnd = (e) => {
-      const touchDuration = e.timeStamp - e.currentTarget.touchStartTime
-      if (touchDuration > 5000) {
-        setKeyCode((prevState) => !prevState)
-        console.log('Toque prolongado detectado')
-      }
-    };
-  
-    useEffect(() => {
-      const element = gestureAreaRef.current;
-      if (element) {
-        element.addEventListener('touchstart', handleTouchStart)
-        element.addEventListener('touchend', handleTouchEnd)
-      }
-  
-      return () => {
-        if (element) {
-          element.removeEventListener('touchstart', handleTouchStart)
-          element.removeEventListener('touchend', handleTouchEnd)
-        }
-      };
-    }, [])
 
   return (
 
-    <div className={styles.main} ref={gestureAreaRef}>
+    <div className={styles.main}>
       <div className={styles.section}>
         <Link href='/' className={styles.tab}>
           <div>

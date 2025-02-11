@@ -16,9 +16,7 @@ export function ListaDeCancionesSearch(props) {
 
   const onOpenDetalles = (usuario) => {
     setListadecancionSeleccionada(usuario)
-    {user && user.nivel === 'admin' ?
-      setShowDetalles(true) : null
-    }
+    setShowDetalles(true) 
   }
 
   const onCloseDetalles = () => {
