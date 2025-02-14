@@ -31,7 +31,7 @@ export default function Usuario() {
   }
 
   const [datoUsuario, setDatoUsuario] = useState(null)
-  
+
   useEffect(() => {
     if (user && user.id) {
       (async () => {
@@ -100,17 +100,17 @@ export default function Usuario() {
     setShowEditDatosUsuario(false);
     setFieldToEdit(null)
   }
-  
+
   const [usuarioData, setUsuarioData] = useState(datoUsuario)
 
   useEffect(() => {
-    setUsuarioData(datoUsuario) 
-  }, [datoUsuario]) 
+    setUsuarioData(datoUsuario)
+  }, [datoUsuario])
 
   const actualizarCancion = (nuevaData) => {
     setUsuarioData((prevState) => ({
       ...prevState,
-      ...nuevaData, 
+      ...nuevaData,
     }))
   }
 
@@ -138,7 +138,7 @@ export default function Usuario() {
 
   const handleTouchEnd = (e) => {
     const touchDuration = e.timeStamp - e.currentTarget.touchStartTime
-    if (touchDuration > 5000) {
+    if (touchDuration > 3000) {
       setKeyCode((prevState) => !prevState)
       console.log('Toque prolongado detectado')
     }
@@ -189,16 +189,16 @@ export default function Usuario() {
           <div className={styles.nombre}>
             <h1>{getValueOrDefault(usuarioData?.nombre)}</h1>
             {user && user ?
-                <div className={styles.iconEditUsuario} onClick={() => onShowOpenEditDatosUsuario('nombre')}>
-                  <FaEdit />
-                </div> : null
-              }
+              <div className={styles.iconEditUsuario} onClick={() => onShowOpenEditDatosUsuario('nombre')}>
+                <FaEdit />
+              </div> : null
+            }
             <h2>{getValueOrDefault(usuarioData?.artista)}</h2>
             {user && user ?
-                <div className={styles.iconEditUsuario} onClick={() => onShowOpenEditDatosUsuario('artista')}>
-                  <FaEdit />
-                </div> : null
-              }
+              <div className={styles.iconEditUsuario} onClick={() => onShowOpenEditDatosUsuario('artista')}>
+                <FaEdit />
+              </div> : null
+            }
           </div>
 
           <div className={styles.datos}>
@@ -270,26 +270,34 @@ export default function Usuario() {
             </div>
           </div>
 
-          {user && user.nombre && keyCode ?
-            <div className={styles.iconEdit}>
-              <div onClick={onOpenClose}>
-                <FaEdit />
+          {user && user.nombre ?
+            <>
+              <div className={styles.iconEdit}>
+                <div onClick={onOpenClose}>
+                  <FaEdit />
+                </div>
               </div>
-            </div> : null
+              <Button
+                negative
+                onClick={logout}
+              >
+                Cerrar sesión
+              </Button>
+            </> : null
           }
+
           {keyCode ?
             <Button
-              negative={user}
-              primary={!user}
-              onClick={user ? logout : handleLoginRedirect}
+              primary
+              onClick={handleLoginRedirect}
             >
-              {user ? 'Cerrar sesión' : 'Iniciar sesión'}
+              Iniciar sesión
             </Button> : null
           }
 
         </div>
 
-          <Footer />
+        <Footer />
 
       </div>
 
@@ -297,7 +305,8 @@ export default function Usuario() {
         <ModCuentaForm onOpenClose={onOpenClose} />
       </BasicModal>
 
-      <BasicModal title="Subir imagen" show={showSubirImg} onClose={onCloseSubirImg}>
+      {user && user.nombre ?
+        <BasicModal title="Subir imagen" show={showSubirImg} onClose={onCloseSubirImg}>
         {datoUsuario &&
           <UploadImg
             reload={reload}
@@ -312,7 +321,8 @@ export default function Usuario() {
             selectedImageKey="image"
           />
         }
-      </BasicModal>
+      </BasicModal>: null
+      }
 
       <BasicModal key={datoUsuario?.id} show={showEditDatosUsuario} onClose={onShowCloseEditDatosUsuario}>
         <DatosUsuarioForm user={user} reload={reload} onReload={onReload} usuarioData={usuarioData} actualizarCancion={actualizarCancion} fieldToEdit={fieldToEdit} onShowCloseEditDatosUsuario={onShowCloseEditDatosUsuario} />
