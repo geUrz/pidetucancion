@@ -17,11 +17,30 @@
 }
 
 .iconUser{
+  width: 40px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
-  top: 20px;
-  right: 18px;
+  top: 0px;
+  right: 10px;
+}
+
+.iconUser img{
+  height: 35px;
+  border-radius: 50%;
+}
+
+.iconUser img:hover{
+  opacity: .4;
 }
 
 .iconUser svg, .iconUser path{
   font-size: 20px;
+  cursor: pointer;
+}
+
+.iconUser svg:hover{
+  opacity: .4;
 }

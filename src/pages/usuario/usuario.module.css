@@ -1,7 +1,8 @@
 .main{
   width: 100%;
-  height: 60vh;
+  height: auto;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -15,19 +16,130 @@
   justify-content: center;
 }
 
-.section svg, .section path{
-  font-size: 80px;
+.image{
+  width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.section h1{
-  margin-top: 5px;
+.image svg, .image path{
+  font-size: 80px;
+  cursor: pointer;
+}
+
+.image img{
+  WIDTH: 250px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.nombre{
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.nombre h1{
   font-size: 24px;
+  font-weight: 600 !important;
   color: var(--clr2);
 }
 
-.section h2{
-  margin-top: 5px;
+.nombre h2{
   font-size: 14px;
+}
+
+.datos{
+  margin-top: 20px;
+  width: 100%;
+  max-width: 280px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.datos > div{
+  margin: 4px 0;
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg1);
+}
+
+.datos a{
+  padding: 8px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  cursor: pointer;
+}
+
+.datos a:hover{
+  background-color: var(--bg2);
+}
+
+.datos svg, .datos path{
+  font-size: 22px !important;
+}
+
+.iconEditUsuario{
+  padding: 8px;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg1);
+  cursor: pointer;
+}
+
+.iconEditUsuario:hover{
+  background-color: var(--bg2);
+}
+
+
+.iconEditUsuario svg, .iconEditUsuario path{
+  font-size: 20px;
+  color: var(--clr3);
+  cursor: pointer;
+}
+
+.iconEditForm{
+  padding: 8px;
+  width: 20%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg1);
+  cursor: pointer;
+}
+
+.iconEditForm svg, .iconEditForm path{
+  font-size: 20px !important;
+  color: var(--clr3);
+}
+
+.iconEditForm:hover{
+  background-color: var(--bg2);
+}
+
+.datos svg, .datos path{
+  font-size: 24px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.datos h2{
+  margin-left: 5px !important;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .iconEdit{
@@ -65,5 +177,41 @@
 .iconEdit svg, .iconEdit path{
   font-size: 20px;
   color: var(--clr0);
+  cursor: pointer;
+}
+
+.iconClose{
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.iconClose svg, .iconClose path{
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.iconCheck{
+  margin-bottom: 20px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg2);
+  cursor: pointer;
+}
+
+.iconCheck:hover{
+  background-color: var(--bg3);
+}
+
+.iconCheck:active{
+  background-color: var(--bg4);
+}
+
+.iconCheck svg, .iconCheck path{
+  font-size: 22px;
+  color: var(--clr1);
   cursor: pointer;
 }

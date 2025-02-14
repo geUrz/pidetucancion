@@ -1,0 +1,33 @@
+.main{
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section{
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section h1{
+  text-align: center;
+  color: azure;
+}
+
+.section h2{
+  margin-top: 20px !important;
+  text-align: center;
+}
+
+.section h3{
+  margin-top: 8px !important;
+  font-size: 16px;
+  text-align: justify;
+}

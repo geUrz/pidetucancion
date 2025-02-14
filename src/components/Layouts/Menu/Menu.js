@@ -1,57 +1,50 @@
 import Link from 'next/link'
-import styles from './Menu.module.css'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaUser } from 'react-icons/fa';
+import { Image } from 'semantic-ui-react';
+import { useAuth } from '@/contexts/AuthContext';
+import axios from 'axios';
+import styles from './Menu.module.css'
 
 export function Menu() {
 
-  const [keyCode, setKeyCode] = useState(false)
+  const { user } = useAuth()
 
-  const gestureAreaRef = useRef(null)
-  
-    const handleTouchStart = (e) => {
-      e.currentTarget.touchStartTime = e.timeStamp
-    };
-  
-    const handleTouchEnd = (e) => {
-      const touchDuration = e.timeStamp - e.currentTarget.touchStartTime
-      if (touchDuration > 3000) {
-        setKeyCode((prevState) => !prevState)
-      }
-    };
-  
-    useEffect(() => {
-      const element = gestureAreaRef.current;
-      if (element) {
-        element.addEventListener('touchstart', handleTouchStart)
-        element.addEventListener('touchend', handleTouchEnd)
-      }
-  
-      return () => {
-        if (element) {
-          element.removeEventListener('touchstart', handleTouchStart)
-          element.removeEventListener('touchend', handleTouchEnd)
+  const [datoUsuario, setDatoUsuario] = useState(null)
+
+  useEffect(() => {
+    if (user && user.id) {
+      (async () => {
+        try {
+          const res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.id}`)
+          setDatoUsuario(res.data)
+        } catch (error) {
+          console.error(error)
         }
-      };
-    }, [])
+      })()
+    }
+  }, [user])
 
   return (
 
     <>
-    
-      <div className={styles.mainTop} ref={gestureAreaRef}>
+
+      <div className={styles.mainTop}>
         <Link href='/'>
           <h1>Pide tu canción</h1>
         </Link>
-        {true ?
-          <div className={styles.iconUser}>
-            <Link href='/join/signin'>
+        <div className={styles.iconUser}>
+          <Link href='/usuario/usuario'>
+            {datoUsuario && datoUsuario.image ? (
+              <Image src={datoUsuario.image} alt="User Image" />
+            ) : (
               <FaUser />
-            </Link> 
-          </div> : null
-        }
+            )}
+          </Link>
+
+        </div>
       </div>
-    
+
     </>
 
   )

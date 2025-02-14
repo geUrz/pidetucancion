@@ -13,6 +13,22 @@
   color: var(--clrGR1) !important;
 }
 
+.mainCheck h2{
+  font-size: 12px !important;
+  text-align: center;
+  color: var(--clrGR1) !important;
+}
+
+.mainCheck a{
+  cursor: pointer;
+}
+
+.pagoSeguro{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .StripeElement {
   margin-top: 10px;
   width: 100% !important;
@@ -21,3 +37,14 @@
   border: 1px solid azure;
   border-radius: 5px;
 }
+
+.mainCheck img{
+  margin-top: 10px;
+  height: 30px;
+}
+
+.mainCheck span{
+  color: var(--clr4);
+  cursor: pointer;
+}
+

@@ -3,7 +3,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '../CheckoutForm/CheckoutForm';
 import { useEffect, useState } from 'react';
 import styles from './CancionDonar.module.css';
-import { Message } from 'semantic-ui-react';
+import { Image, Message } from 'semantic-ui-react';
 import { IconClose } from '../Layouts';
 import axios from 'axios';
 
@@ -122,6 +122,10 @@ export function CancionDonar(props) {
 
       <div className={styles.main}>
         <h1>¿ Deseas hacer una donación ?</h1>
+        <div className={styles.pagoSeguro}>
+          <h1>Pago seguro</h1>
+          <Image src='/img/pagoseguro.png' />
+        </div>
         <h2>¡ Ingresa una cantidad aquí !</h2>
 
         <div className={styles.amount}>
