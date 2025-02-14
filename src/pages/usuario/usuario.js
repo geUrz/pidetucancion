@@ -115,6 +115,7 @@ export default function Usuario() {
   }
 
   const [keyCode, setKeyCode] = useState(false)
+  const onIniciarSesion = () => setKeyCode((prevState) => !prevState)
 
   const handleKeyCode = (event) => {
     if (event.ctrlKey && event.key === 'l') {
@@ -130,35 +131,6 @@ export default function Usuario() {
     }
   }, [])
 
-  const gestureAreaRef = useRef(null)
-
-  const handleTouchStart = (e) => {
-    e.currentTarget.touchStartTime = e.timeStamp
-  };
-
-  const handleTouchEnd = (e) => {
-    const touchDuration = e.timeStamp - e.currentTarget.touchStartTime
-    if (touchDuration > 3000) {
-      setKeyCode((prevState) => !prevState)
-      console.log('Toque prolongado detectado')
-    }
-  };
-
-  useEffect(() => {
-    const element = gestureAreaRef.current;
-    if (element) {
-      element.addEventListener('touchstart', handleTouchStart)
-      element.addEventListener('touchend', handleTouchEnd)
-    }
-
-    return () => {
-      if (element) {
-        element.removeEventListener('touchstart', handleTouchStart)
-        element.removeEventListener('touchend', handleTouchEnd)
-      }
-    };
-  }, [])
-
   if (loading) {
     <Loading size={45} loading={1} />
   }
@@ -172,9 +144,9 @@ export default function Usuario() {
       <div className={styles.main}>
         <div className={styles.section}>
 
-          <div className={styles.image} ref={gestureAreaRef}>
+          <div className={styles.image}>
             {!usuarioData?.image ? (
-              <FaUser onClick={() => onShowSubirImg()} />
+              <FaUser onClick={user && user.nombre ? () => onShowSubirImg() : onIniciarSesion} />
             ) : (
               <Image
                 src={usuarioData.image}
