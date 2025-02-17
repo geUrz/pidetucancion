@@ -63,8 +63,8 @@ app.prepare().then(() => {
     return handle(req, res)
   })
 
-  // El servidor escucha en el puerto 3000
-  const PORT = process.env.PORT || 3000;
+  // El servidor escucha en el puerto 3004
+  const PORT = process.env.PORT || 3004;
   httpServer.listen(PORT, (err) => {
     if (err) throw err;
     console.log(`> Ready on http://localhost:${PORT}`)
