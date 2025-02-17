@@ -12,7 +12,7 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    // Conexión persistente al socket
+
     const socketInstance = io();
     setSocket(socketInstance);
 

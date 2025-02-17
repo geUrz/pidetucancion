@@ -68,10 +68,10 @@ export default function Cancionesdisponibles() {
     if (typeof window !== "undefined" && Notification.permission !== "denied") {
       // Solicitar permiso solo si no ha sido denegado
       Notification.requestPermission().then(permission => {
-        console.log(permission);  // Asegúrate de que el permiso fue exitoso
-      });
+        console.log(permission)
+      })
     }
-  }, []);
+  }, [])
 
   if (loading) {
     return <Loading size={45} loading={0} />

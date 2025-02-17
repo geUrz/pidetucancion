@@ -1,5 +1,5 @@
 
-import { AuthProvider, SocketProvider } from '@/contexts'
+import { AuthProvider, NotificationProvider, SocketProvider } from '@/contexts'
 import 'semantic-ui-css/semantic.min.css'
 import '@/styles/globals.css'
 
@@ -11,7 +11,9 @@ export default function App(props) {
   
     <AuthProvider>
       <SocketProvider>
+        <NotificationProvider>
       <Component {...pageProps} />
+        </NotificationProvider>
       </SocketProvider>
     </AuthProvider>
 

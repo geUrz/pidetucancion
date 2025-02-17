@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Confirm, ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
 import { BiMicrophone } from 'react-icons/bi'
@@ -6,10 +6,10 @@ import { BasicModal } from '@/layouts'
 import { CancionesenfilaDetalles } from '../CancionesenfilaDetalles'
 import { getValueOrDefault } from '@/helpers'
 import styles from './CancionesenfilaLista.module.css'
-
-import io from 'socket.io-client'
 import { FaCheck, FaTimes, FaTrash } from 'react-icons/fa'
 import axios from 'axios'
+
+import io from 'socket.io-client'
 
 export function CancionesenfilaLista(props) {
 
@@ -23,36 +23,27 @@ export function CancionesenfilaLista(props) {
 
   useEffect(() => {
     setCancionesActualizadas(cancionesenfila)
-  }, [cancionesenfila])  // Solo se actualiza si `cancionesenfila` cambia
+  }, [cancionesenfila])  
+
+  const socket = useMemo(() => io('http://localhost:3004'), [])
 
   useEffect(() => {
-    if (reload) {
-      // Si se recarga, puedes hacer alguna lógica adicional si es necesario.
-      // Como mostrar un spinner de carga, por ejemplo.
-      onReload()  // Llama a onReload para actualizar la lista de canciones
-    }
-  }, [reload])
-
-  const socket = io('http://localhost:3000')
-
-  useEffect(() => {
+  
     const fetchCanciones = async () => {
       try {
         const response = await fetch('/api/cancionesenfila/cancionesenfila')
         const data = await response.json()
-        setCancionesActualizadas(data)  // Actualiza el estado con las canciones más recientes
+        setCancionesActualizadas(data)
       } catch (error) {
         console.error('Error al obtener las canciones:', error)
       }
     };
 
-    fetchCanciones()  // Llamada al backend para obtener las canciones
+    fetchCanciones()  
+    socket.emit('getCanciones') 
 
-    // Emitir evento para obtener las canciones actualizadas al conectarse
-    socket.emit('getCanciones')
-
+    
     socket.on('nuevaCancion', (nuevaCancion) => {
-      // Asegurarnos de que la nuevaCancion tiene los datos correctos
       if (nuevaCancion && nuevaCancion.cancion && nuevaCancion.id) {
         setCancionesActualizadas((prevCanciones) => [...prevCanciones, nuevaCancion])
       } else {
@@ -61,16 +52,19 @@ export function CancionesenfilaLista(props) {
     })
 
     socket.on('cancionEliminada', (deletedSongId) => {
-      setCancionesActualizadas((prev) =>
-        prev.filter((cancion) => cancion.id !== deletedSongId)
-      )
+      setCancionesActualizadas((prev) => prev.filter((cancion) => cancion.id !== deletedSongId))
+    })
+
+    socket.on('cancionesEliminadas', () => {
+      setCancionesActualizadas([]) 
     })
 
     return () => {
       socket.off('nuevaCancion')
       socket.off('cancionEliminada')
+      socket.off('cancionesEliminadas')
     };
-  }, [])
+  }, [socket])
 
   const onOpenDetalles = (cancionenfila) => {
     setCancionenfilaSeleccionado(cancionenfila)
@@ -93,11 +87,11 @@ export function CancionesenfilaLista(props) {
   const [micStates, setMicStates] = useState({})
 
   useEffect(() => {
-    // Solo ejecutamos el reduce si cancionesenfila es un arreglo válido
+
     if (Array.isArray(cancionesActualizadas)) {
       const states = cancionesActualizadas.reduce((acc, cancion) => {
         const storedState = localStorage.getItem(`toggleMic_${cancion.id}`)
-        acc[cancion.id] = storedState ? JSON.parse(storedState) : true; // Valor por defecto true si no está en el localStorage
+        acc[cancion.id] = storedState ? JSON.parse(storedState) : true;
         return acc;
       }, {})
       setMicStates(states)
@@ -147,12 +141,16 @@ export function CancionesenfilaLista(props) {
 
   const deleteAllSongs = async () => {
     try {
-      // Usamos params para enviar usuario_id como parámetro en la URL
+
       const res = await axios.delete(`/api/cancionesenfila/cancionesenfila`, {
         params: { usuario_id: user.id }
       })
 
       if (res.status === 200) {
+
+        socket.emit('cancionesEliminadas')
+
+
         setCancionesActualizadas([])
         onToastSuccessDel()
         setShowConfirmDel(false)

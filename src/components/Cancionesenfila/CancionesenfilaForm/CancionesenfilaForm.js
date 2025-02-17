@@ -5,13 +5,13 @@ import axios from 'axios'
 import styles from './CancionesenfilaForm.module.css'
 
 import { useSocket } from '@/contexts/SocketContext' 
-import { useRouter } from 'next/router'
+import { useNotification } from '@/contexts'
 
 export function CancionesenfilaForm(props) {
 
   const { user, reload, onReload, cancionData, onOpenCloseDonar, onToastSuccess, onCloseDetalles } = props
 
-  const route = useRouter()
+  const { showNotification } = useNotification()
 
   const [nombre, setNombre] = useState('')
   const [mensaje, setMensaje] = useState('')
@@ -73,19 +73,6 @@ export function CancionesenfilaForm(props) {
     if (newMensaje.length <= MAX_MESSAGE_LENGTH) {
       setMensaje(newMensaje)
       setMensajeLength(newMensaje.length)
-    }
-  }
-
-  const showNotification = (title, body) => {
-    if (typeof window !== "undefined" && Notification.permission === 'granted') {
-      const notification = new Notification(title, {
-        body: body,
-        icon: '/path/to/icon.png', 
-      })
-
-      notification.onclick = () => {
-        route.push('/cancionesenfila')
-      }
     }
   }
 
