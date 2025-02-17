@@ -25,7 +25,7 @@ export default async function loginHandler(req, res) {
 
     const token = jwt.sign(
       {
-        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 30,
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 3,
         id: user.id,
         usuario: user.usuario,
         email: user.email,
