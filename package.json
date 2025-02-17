@@ -3,10 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3004",
+    "dev": "node server.js",
     "build": "next build",
-    "start": "next start -p 3004",
-    "lint": "next lint"
+    "start": "node server.js"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.1.1",
@@ -17,11 +16,13 @@
     "cookie": "^1.0.2",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
+    "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.12.0",
-    "next": "15.1.6",
+    "next": "^15.1.7",
+    "next-pwa": "^5.6.0",
     "onesignal-cordova-plugin": "^5.2.9",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -30,6 +31,8 @@
     "semantic-ui-css": "^2.5.0",
     "semantic-ui-react": "^2.1.5",
     "sharp": "^0.33.5",
+    "socket.io": "^4.8.1",
+    "socket.io-client": "^4.8.1",
     "stripe": "^17.6.0"
   }
 }

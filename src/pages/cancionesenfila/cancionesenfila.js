@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import styles from './cancionesenfila.module.css'
+import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 
 export default function Cancionesenfila() {
 
@@ -12,19 +13,25 @@ export default function Cancionesenfila() {
 
   const [reload, setReload] = useState(false)
 
-  const onReload = () => setReload((prevState) => !prevState)
+  const [cancionesenfila, setCancionesenfila] = useState([])
 
-  const [cancionesenfila, setCancionesenfila] = useState(null)
+  const onReload = (deletedSongId) => {
+    setCancionesenfila(prevCanciones => prevCanciones.filter(cancion => cancion.id !== deletedSongId))
+    setReload(true)
+  }
 
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await axios.get(`/api/cancionesenfila/cancionesenfila`)
-        setCancionesenfila(res.data)
-      } catch (error) {
-        console.error(error)
-      }
-    })()
+    if (reload) {
+      (async () => {
+        try {
+          const res = await axios.get(`/api/cancionesenfila/cancionesenfila`)
+          setCancionesenfila(res.data)
+          setReload(false)
+        } catch (error) {
+          console.error(error)
+        }
+      })()
+    }
   }, [reload])
 
   const [toastSuccessDel, setToastSuccessReportesDel] = useState(false)
@@ -42,6 +49,8 @@ export default function Cancionesenfila() {
 
   return (
 
+    <ProtectedRoute>
+
       <BasicLayout relative>
 
         {toastSuccessDel && <ToastDelete contain='Eliminado exitosamente' onClose={() => setToastSuccessReportesDel(false)} />}
@@ -51,6 +60,8 @@ export default function Cancionesenfila() {
         <CancionesenfilaLista user={user} loading={loading} reload={reload} onReload={onReload} cancionesenfila={cancionesenfila} setCancionesenfila={setCancionesenfila} onToastSuccessDel={onToastSuccessDel} />
 
       </BasicLayout>
+
+    </ProtectedRoute>
 
   )
 }

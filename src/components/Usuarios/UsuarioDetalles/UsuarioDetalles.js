@@ -10,7 +10,7 @@ import { UsuarioEditForm } from '../UsuarioEditForm'
 
 export function UsuarioDetalles(props) {
 
-  const { reload, onReload, usuario, onCloseDetalles, onToastSuccessMod, toastSuccessDel } = props
+  const { reload, onReload, usuario, onCloseDetalles, onToastSuccessMod, onToastSuccessDel } = props
 
   const { user } = useAuth()
 
@@ -27,7 +27,7 @@ export function UsuarioDetalles(props) {
       try {
         await axios.delete(`/api/usuarios/usuarios?id=${usuario.id}`)
         onReload()
-        toastSuccessDel()
+        onToastSuccessDel()
         onCloseDetalles()
       } catch (error) {
         console.error('Error al eliminar la usuario:', error)

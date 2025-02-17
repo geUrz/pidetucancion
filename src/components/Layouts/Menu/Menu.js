@@ -5,25 +5,47 @@ import { Image } from 'semantic-ui-react';
 import { useAuth } from '@/contexts/AuthContext';
 import axios from 'axios';
 import styles from './Menu.module.css'
+import { Loading } from '../Loading';
 
 export function Menu() {
 
   const { user } = useAuth()
-
+  
   const [datoUsuario, setDatoUsuario] = useState(null)
 
   useEffect(() => {
     if (user && user.id) {
       (async () => {
         try {
-          const res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.id}`)
-          setDatoUsuario(res.data)
+          // Primero, intentamos obtener los datos con el cantante_id
+          let res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.cantante_id}`);
+          
+          // Si no encontramos la imagen, hacemos una nueva consulta usando user.id
+          if (!res.data.image) {
+            res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.id}`);
+          }
+          
+          setDatoUsuario(res.data);
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
-      })()
+      })();
     }
   }, [user])
+
+  const [isLoading, setIsLoading] = useState(true); // Estado de carga
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  useEffect(() => {
+    // Simula una llamada de carga para los datos del usuario
+    if (datoUsuario) {
+      setIsLoading(false); // Cuando datoUsuario está disponible, cambia el estado
+    }
+  }, [datoUsuario])
+
+  const handleImageLoad = () => {
+    setImageLoaded(true); // Cuando la imagen se ha cargado
+  }
 
   return (
 
@@ -35,8 +57,10 @@ export function Menu() {
         </Link>
         <div className={styles.iconUser}>
           <Link href='/usuario/usuario'>
-            {datoUsuario && datoUsuario.image ? (
-              <Image src={datoUsuario.image} alt="User Image" />
+            {isLoading  ? (
+              <Loading size={24} loading={4} />
+            ) : datoUsuario.image ? (
+              <Image src={datoUsuario.image} />
             ) : (
               <FaUser />
             )}

@@ -22,7 +22,7 @@ export default function Signup() {
     nivel: '',
     password: '',
     confirmarPassword: ''
-  });
+  })
 
   useRedirectIfAuthenticated()
 
@@ -32,7 +32,7 @@ export default function Signup() {
     setCredentials({
       ...credentials,
       [name]: value
-    });
+    })
   }
 
   const validarFormSignUp = () => {
@@ -68,20 +68,20 @@ export default function Signup() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
   
     if (!validarFormSignUp()) {
       return;
     }
   
-    setError(null);
+    setError(null)
   
     if (credentials.password !== credentials.confirmarPassword) {
-      setError("Las contraseñas no coinciden");
+      setError("Las contraseñas no coinciden")
       return;
     }
   
-    const folio = genUserId(4);
+    const folio = genUserId(4)
     const isactive = 1;
   
     try {
@@ -95,12 +95,12 @@ export default function Signup() {
         password: credentials.password
       }, {
         validateStatus: function (status) {
-          return status < 500; // ⚠️ Acepta todos los errores 4xx, evita que rompan la app
+          return status < 500
         }
-      });
+      })
   
       if (response.status === 201) {
-        router.push('/join/signin');
+        router.push('/join/signin')
         setCredentials({
           nombre: '',
           usuario: '',
@@ -108,14 +108,14 @@ export default function Signup() {
           nivel: '',
           password: '',
           confirmarPassword: ''
-        });
-        setError(null);
+        })
+        setError(null)
       } else {
-        setError(response.data?.error || "Ocurrió un error inesperado.");
+        setError(response.data?.error || "Ocurrió un error inesperado.")
       }
     } catch (error) {
-      console.error("🔥 Error inesperado:", error);
-      setError("Error de conexión con el servidor.");
+      console.error("🔥 Error inesperado:", error)
+      setError("Error de conexión con el servidor.")
     }
   }
   

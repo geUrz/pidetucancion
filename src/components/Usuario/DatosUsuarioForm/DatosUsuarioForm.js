@@ -31,15 +31,16 @@ export function DatosUsuarioForm(props) {
     e.preventDefault()
 
     try {
+      let res
       if (usuarioData?.usuario_id) {
 
-        await axios.put(`/api/usuarios/datos_usuario?usuario_id=${usuarioData.usuario_id}`, {
+        res = await axios.put(`/api/usuarios/datos_usuario?usuario_id=${usuarioData.usuario_id}`, {
           usuario_id: user.id,
           ...formData 
         })
       } else {
   
-        await axios.post('/api/usuarios/datos_usuario', {
+        res = await axios.post('/api/usuarios/datos_usuario', {
           usuario_id: user.id,
           ...formData
         })
@@ -57,7 +58,10 @@ export function DatosUsuarioForm(props) {
       })
 
       onReload()
-      actualizarCancion(formData)
+      const updatedData = res.data; // Obtener los datos actualizados de la API
+
+    // Actualizar el estado en usuario.js a través de actualizarCancion
+      actualizarCancion(updatedData);
       onShowCloseEditDatosUsuario()
 
     } catch (error) {
@@ -79,6 +83,7 @@ export function DatosUsuarioForm(props) {
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleInputChange}
+                placeholder='Tu nombre'
               />
             </FormField>
           )}
@@ -90,6 +95,7 @@ export function DatosUsuarioForm(props) {
                 name="artista"
                 value={formData.artista}
                 onChange={handleInputChange}
+                placeholder='Ejemplo: Cantante / Compositor'
               />
             </FormField>
           )}
@@ -112,7 +118,7 @@ export function DatosUsuarioForm(props) {
                 name="facebook"
                 value={formData.facebook}
                 onChange={handleInputChange}
-                placeholder='https://www.facebook.com/miperfil'
+                placeholder='Ejemplo: https://www.facebook.com/miperfil'
               />
             </FormField>
           )}
@@ -124,7 +130,7 @@ export function DatosUsuarioForm(props) {
                 name="tiktok"
                 value={formData.tiktok}
                 onChange={handleInputChange}
-                placeholder='https://www.tiktok.com/@miperfil'
+                placeholder='Ejemplo: https://www.tiktok.com/@miperfil'
               />
             </FormField>
           )}
@@ -136,7 +142,7 @@ export function DatosUsuarioForm(props) {
                 name="instagram"
                 value={formData.instagram}
                 onChange={handleInputChange}
-                placeholder='https://www.instagram.com/miperfil'
+                placeholder='Ejemplo: https://www.instagram.com/miperfil'
               />
             </FormField>
           )}
@@ -148,7 +154,7 @@ export function DatosUsuarioForm(props) {
                 name="vimeo"
                 value={formData.vimeo}
                 onChange={handleInputChange}
-                placeholder='https://www.vimeo.com/watch?v=mivideo'
+                placeholder='Ejemplo: https://www.vimeo.com/watch?v=mivideo'
               />
             </FormField>
           )}
@@ -160,7 +166,7 @@ export function DatosUsuarioForm(props) {
                 name="youtube"
                 value={formData.youtube}
                 onChange={handleInputChange}
-                placeholder='https://www.youtube.com/watch?v=mivideo'
+                placeholder='Ejemplo: https://www.youtube.com/watch?v=mivideo'
               />
             </FormField>
           )}

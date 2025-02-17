@@ -1,29 +1,57 @@
 import { IconClose } from '@/components/Layouts'
 import { Button, Form, FormField, FormGroup, Input, Label, TextArea } from 'semantic-ui-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import styles from './CancionesenfilaForm.module.css'
 
+import { useSocket } from '@/contexts/SocketContext' 
+import { useRouter } from 'next/router'
+
 export function CancionesenfilaForm(props) {
 
-  const { reload, onReload, cancionData, onOpenCloseDonar, onToastSuccess, onCloseDetalles } = props
+  const { user, reload, onReload, cancionData, onOpenCloseDonar, onToastSuccess, onCloseDetalles } = props
+
+  const route = useRouter()
 
   const [nombre, setNombre] = useState('')
   const [mensaje, setMensaje] = useState('')
   const [mensajeLength, setMensajeLength] = useState(0)
+
+  const socket = useSocket()
+
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const crearCancion = async (e) => {
     e.preventDefault()
 
     const estado = 'activa'
 
+    const nuevaCancion = {
+      usuario_id: user && user.nivel === 'admin' ? user.id : user.cantante_id,
+      cancion: cancionData.cancion,
+      cantante: cancionData.cantante,
+      nombre,
+      mensaje,
+      estado
+    }
+    
+
     try {
-      await axios.post ('/api/cancionesenfila/cancionesenfila', {
-        cancion: cancionData.cancion,
-        nombre, 
-        mensaje, 
-        estado
-      })
+      const res = await axios.post('/api/cancionesenfila/cancionesenfila', nuevaCancion)
+
+      const cancionConId = res.data 
+
+      if (socket) {
+        socket.emit('nuevaCancion', cancionConId)
+      }
+
+      if (isClient) {
+        showNotification('¡Nueva canción agregada!', `Canción: ${cancionConId.cancion}`)
+      }
 
       setNombre('')
       setMensaje('')
@@ -48,6 +76,19 @@ export function CancionesenfilaForm(props) {
     }
   }
 
+  const showNotification = (title, body) => {
+    if (typeof window !== "undefined" && Notification.permission === 'granted') {
+      const notification = new Notification(title, {
+        body: body,
+        icon: '/path/to/icon.png', 
+      })
+
+      notification.onclick = () => {
+        route.push('/cancionesenfila')
+      }
+    }
+  }
+
   return (
 
     <>
@@ -69,7 +110,7 @@ export function CancionesenfilaForm(props) {
             <Label>Mensaje (opcional)</Label>
             <TextArea
               type="text"
-              placeholder='Escribe tu mensaje'
+              placeholder='Escribe tu mensaje o dedicatoria aquí'
               value={mensaje}
               onChange={handleMensajeChange}
             />
@@ -78,7 +119,7 @@ export function CancionesenfilaForm(props) {
             </div>
           </FormField>
         </FormGroup>
-        <Button primary onClick={onOpenCloseDonar}>Agregar</Button>
+        <Button primary onClick={crearCancion}>Agregar</Button>
       </Form>
 
     </>

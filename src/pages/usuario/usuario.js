@@ -3,7 +3,7 @@ import { Confirm, Footer, Loading, Title, UploadImg } from '@/components/Layouts
 import { useAuth } from '@/contexts/AuthContext'
 import { FaCheck, FaEdit, FaFacebook, FaInstagram, FaTiktok, FaTimes, FaUser, FaVimeo, FaWhatsapp, FaYoutube } from 'react-icons/fa'
 import { Button, Image } from 'semantic-ui-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { ModCuentaForm, DatosUsuarioForm } from '@/components/Usuario'
 import Link from 'next/link'
 import { getValueOrDefault } from '@/helpers'
@@ -11,6 +11,8 @@ import { getValueOrWhite } from '@/helpers/getValueOrWhite'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import styles from './usuario.module.css'
+import { UsuarioAddDatosImage } from '@/components/Usuarios'
+import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 
 export default function Usuario() {
 
@@ -36,14 +38,21 @@ export default function Usuario() {
     if (user && user.id) {
       (async () => {
         try {
-          const res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.id}`)
-          setDatoUsuario(res.data)
+          // Primero, intentamos obtener los datos con el cantante_id
+          let res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.cantante_id}`);
+
+          // Si no encontramos la imagen, hacemos una nueva consulta usando user.id
+          if (!res.data.image) {
+            res = await axios.get(`/api/usuarios/datos_usuario?usuario_id=${user.id}`);
+          }
+
+          setDatoUsuario(res.data);
         } catch (error) {
-          console.error(error)
+          console.error(error);
         }
-      })()
+      })();
     }
-  }, [user])
+  }, [user, reload])
 
   const [showSubirImg, setShowSubirImg] = useState(false)
 
@@ -105,7 +114,7 @@ export default function Usuario() {
 
   useEffect(() => {
     setUsuarioData(datoUsuario)
-  }, [datoUsuario])
+  }, [datoUsuario, usuarioData])
 
   const actualizarCancion = (nuevaData) => {
     setUsuarioData((prevState) => ({
@@ -115,7 +124,6 @@ export default function Usuario() {
   }
 
   const [keyCode, setKeyCode] = useState(false)
-  const onIniciarSesion = () => setKeyCode((prevState) => !prevState)
 
   const handleKeyCode = (event) => {
     if (event.ctrlKey && event.key === 'l') {
@@ -135,9 +143,11 @@ export default function Usuario() {
     <Loading size={45} loading={1} />
   }
 
+  const datoUser = user && usuarioData && usuarioData.id
+
   return (
 
-    <>
+    <ProtectedRoute>
 
       <Title title='datos del artista' iconBack />
 
@@ -146,117 +156,183 @@ export default function Usuario() {
 
           <div className={styles.image}>
             {!usuarioData?.image ? (
-              <FaUser onClick={user && user.nombre ? () => onShowSubirImg() : onIniciarSesion} />
+              <FaUser onClick={() => {
+                if (user && user.nivel === 'admin') {
+                  onShowSubirImg();
+                }
+              }} />
             ) : (
               <Image
                 src={usuarioData.image}
                 onClick={() => {
-                  setImageToDelete()
-                  onShowConfirmDelImg()
+                  if (user && user.nivel === 'admin') {
+                    setImageToDelete();
+                    onShowConfirmDelImg();
+                  }
                 }}
               />
             )}
-          </div>
 
+          </div>
           <div className={styles.nombre}>
             <h1>{getValueOrDefault(usuarioData?.nombre)}</h1>
-            {user && user ?
+            {user && user.nivel === 'admin' && (
               <div className={styles.iconEditUsuario} onClick={() => onShowOpenEditDatosUsuario('nombre')}>
                 <FaEdit />
-              </div> : null
+              </div>)
             }
             <h2>{getValueOrDefault(usuarioData?.artista)}</h2>
-            {user && user ?
+            {user && user.nivel === 'admin' && (
               <div className={styles.iconEditUsuario} onClick={() => onShowOpenEditDatosUsuario('artista')}>
                 <FaEdit />
-              </div> : null
+              </div>)
             }
           </div>
 
           <div className={styles.datos}>
             <div>
-              <Link href={`https://wa.me/${getValueOrWhite(usuarioData?.whatsapp)}`} target="_blank">
+              <Link
+                href={usuarioData?.whatsapp ? `https://wa.me/${getValueOrWhite(usuarioData.whatsapp)}` : "#"}
+                target={usuarioData?.whatsapp ? "_blank" : "_self"}
+                onClick={(e) => {
+                  if (!usuarioData?.whatsapp) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <FaWhatsapp />
-                <h2>Whatsapp</h2>
+                <h2>{usuarioData?.whatsapp ? "Whatsapp" : getValueOrDefault(usuarioData?.whatsapp)}</h2>
               </Link>
-              {user && user ?
+
+              {user && user.nivel === 'admin' && (
                 <div className={styles.iconEditForm} onClick={() => onShowOpenEditDatosUsuario('whatsapp')}>
                   <FaEdit />
-                </div> : null
-              }
+                </div>
+              )}
             </div>
+
             <div>
-              <Link href={`${usuarioData?.facebook}`} target="_blank">
+              <Link
+                href={usuarioData?.facebook ? `${usuarioData.facebook}` : "#"}
+                target={usuarioData?.facebook ? "_blank" : "_self"}
+                onClick={(e) => {
+                  if (!usuarioData?.facebook) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <FaFacebook />
-                <h2>Facebook</h2>
+                <h2>{usuarioData?.facebook ? "Facebook" : getValueOrDefault(usuarioData?.facebook)}</h2>
               </Link>
-              {user && user ?
+
+              {user && user.nivel === 'admin' && (
                 <div className={styles.iconEditForm} onClick={() => onShowOpenEditDatosUsuario('facebook')}>
                   <FaEdit />
-                </div> : null
-              }
+                </div>
+              )}
             </div>
+
             <div>
-              <Link href={`${usuarioData?.tiktok}`} target="_blank">
+              <Link
+                href={usuarioData?.tiktok ? `${usuarioData.tiktok}` : "#"}
+                target={usuarioData?.tiktok ? "_blank" : "_self"}
+                onClick={(e) => {
+                  if (!usuarioData?.tiktok) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <FaTiktok />
-                <h2>Tiktok</h2>
+                <h2>{usuarioData?.tiktok ? "Tiktok" : getValueOrDefault(usuarioData?.tiktok)}</h2>
               </Link>
-              {user && user ?
+
+              {user && user.nivel === 'admin' && (
                 <div className={styles.iconEditForm} onClick={() => onShowOpenEditDatosUsuario('tiktok')}>
                   <FaEdit />
-                </div> : null
-              }
+                </div>
+              )}
             </div>
+
             <div>
-              <Link href={`${usuarioData?.instagram}`} target="_blank">
+              <Link
+                href={usuarioData?.instagram ? `${usuarioData.instagram}` : "#"}
+                target={usuarioData?.instagram ? "_blank" : "_self"}
+                onClick={(e) => {
+                  if (!usuarioData?.instagram) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <FaInstagram />
-                <h2>Instagram</h2>
+                <h2>{usuarioData?.instagram ? "Instagram" : getValueOrDefault(usuarioData?.instagram)}</h2>
               </Link>
-              {user && user ?
+
+              {user && user.nivel === 'admin' && (
                 <div className={styles.iconEditForm} onClick={() => onShowOpenEditDatosUsuario('instagram')}>
                   <FaEdit />
-                </div> : null
-              }
+                </div>
+              )}
             </div>
+
             <div>
-              <Link href={`${usuarioData?.vimeo}`} target="_blank">
+              <Link
+                href={usuarioData?.vimeo ? `${usuarioData.vimeo}` : "#"}
+                target={usuarioData?.vimeo ? "_blank" : "_self"}
+                onClick={(e) => {
+                  if (!usuarioData?.vimeo) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <FaVimeo />
-                <h2>Vimeo</h2>
+                <h2>{usuarioData?.vimeo ? "Vimeo" : getValueOrDefault(usuarioData?.vimeo)}</h2>
               </Link>
-              {user && user ?
+
+              {user && user.nivel === 'admin' && (
                 <div className={styles.iconEditForm} onClick={() => onShowOpenEditDatosUsuario('vimeo')}>
                   <FaEdit />
-                </div> : null
-              }
+                </div>
+              )}
             </div>
+
             <div>
-              <Link href={`${usuarioData?.youtube}`} target="_blank">
+              <Link
+                href={usuarioData?.youtube ? `${usuarioData.youtube}` : "#"}
+                target={usuarioData?.youtube ? "_blank" : "_self"}
+                onClick={(e) => {
+                  if (!usuarioData?.youtube) {
+                    e.preventDefault();
+                  }
+                }}
+              >
                 <FaYoutube />
-                <h2>Youtube</h2>
+                <h2>{usuarioData?.youtube ? "Youtube" : getValueOrDefault(usuarioData?.youtube)}</h2>
               </Link>
-              {user && user ?
+
+              {user && user.nivel === 'admin' && (
                 <div className={styles.iconEditForm} onClick={() => onShowOpenEditDatosUsuario('youtube')}>
                   <FaEdit />
-                </div> : null
-              }
+                </div>
+              )}
             </div>
+
           </div>
 
-          {user && user.nombre ?
+          {user && (
             <>
-              <div className={styles.iconEdit}>
-                <div onClick={onOpenClose}>
-                  <FaEdit />
+              {user.nivel === 'admin' && (
+                <div className={styles.iconEdit}>
+                  <div onClick={onOpenClose}>
+                    <FaEdit />
+                  </div>
                 </div>
-              </div>
-              <Button
-                negative
-                onClick={logout}
-              >
+              )}
+
+              <Button negative onClick={logout}>
                 Cerrar sesión
               </Button>
-            </> : null
-          }
+            </>
+          )}
 
           {keyCode ?
             <Button
@@ -277,13 +353,12 @@ export default function Usuario() {
         <ModCuentaForm onOpenClose={onOpenClose} />
       </BasicModal>
 
-      {user && user.nombre ?
-        <BasicModal title="Subir imagen" show={showSubirImg} onClose={onCloseSubirImg}>
-        {datoUsuario &&
+      <BasicModal title="Subir imagen" show={showSubirImg} onClose={onCloseSubirImg}>
+        {usuarioData && datoUser ?
           <UploadImg
             reload={reload}
             onReload={onReload}
-            itemId={datoUsuario.id}
+            itemId={usuarioData.id}
             endpoint="usuarios"
             onShowSubirImg={onCloseSubirImg}
             onSuccess={(key, url) => {
@@ -291,10 +366,11 @@ export default function Usuario() {
               onCloseSubirImg()
             }}
             selectedImageKey="image"
-          />
+          /> :
+          <UsuarioAddDatosImage onCloseSubirImg={onCloseSubirImg} />
         }
-      </BasicModal>: null
-      }
+      </BasicModal>
+
 
       <BasicModal key={datoUsuario?.id} show={showEditDatosUsuario} onClose={onShowCloseEditDatosUsuario}>
         <DatosUsuarioForm user={user} reload={reload} onReload={onReload} usuarioData={usuarioData} actualizarCancion={actualizarCancion} fieldToEdit={fieldToEdit} onShowCloseEditDatosUsuario={onShowCloseEditDatosUsuario} />
@@ -309,7 +385,7 @@ export default function Usuario() {
         content="¿Estás seguro de eliminar la imagen?"
       />
 
-    </>
+    </ProtectedRoute>
 
   )
 }

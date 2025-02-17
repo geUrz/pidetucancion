@@ -3,7 +3,7 @@ import { ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
 import { BiMicrophone } from 'react-icons/bi'
 import { BasicModal } from '@/layouts'
-import { CancionesdisponiblesDetalles, ListaDeCancionesDetalles } from '../CancionesdisponiblesDetalles'
+import { CancionesdisponiblesDetalles } from '../CancionesdisponiblesDetalles'
 import { getValueOrDefault } from '@/helpers'
 import styles from './CancionesdisponiblesLista.module.css'
 

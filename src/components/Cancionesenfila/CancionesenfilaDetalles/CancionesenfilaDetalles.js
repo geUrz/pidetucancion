@@ -5,9 +5,14 @@ import axios from 'axios'
 import { getValueOrDefault } from '@/helpers'
 import styles from './CancionesenfilaDetalles.module.css'
 
+import { useSocket } from '@/contexts/SocketContext'
+
+
 export function CancionesenfilaDetalles(props) {
 
   const { user, reload, onReload, cancionenfila, onCloseDetalles, onToastSuccessDel, handleToggleMic, micState } = props
+
+  const socket = useSocket()
 
   const [showConfirmDel, setShowConfirmDel] = useState(false)
 
@@ -15,18 +20,22 @@ export function CancionesenfilaDetalles(props) {
 
   const [toggleMic, setToggleMic] = useState(micState || true)
 
-  // Actualizamos el estado de toggleMic en el localStorage y el estado local
   const onToggleMic = () => {
     const newState = !toggleMic;
     setToggleMic(newState);
     handleToggleMic(cancionenfila.id, newState);
   }
 
-  const handleDeleteCliente = async () => {
+  const handleDeleteCancion = async () => {
     if (cancionenfila?.id) {
       try {
         await axios.delete(`/api/cancionesenfila/cancionesenfila?id=${cancionenfila.id}`)
-        onReload()
+
+        if (socket) {
+          socket.emit('cancionEliminada', cancionenfila.id);
+        }
+
+        onReload(cancionenfila.id)
         onToastSuccessDel()
         onCloseDetalles()
       } catch (error) {
@@ -38,7 +47,7 @@ export function CancionesenfilaDetalles(props) {
   }
 
   useEffect(() => {
-    setToggleMic(micState); // Establecemos el estado inicial cuando cambia micState
+    setToggleMic(micState)
   }, [micState])
 
   return (
@@ -55,14 +64,18 @@ export function CancionesenfilaDetalles(props) {
               <h2>{getValueOrDefault(cancionenfila?.cancion)}</h2>
             </div>
             <div>
+              <h1>Nombre</h1>
+              <h2>{getValueOrDefault(cancionenfila?.nombre)}</h2>
+            </div>
+            <div>
               <h1>Mensaje</h1>
               <h2>{getValueOrDefault(cancionenfila?.mensaje)}</h2>
             </div>
           </div>
           <div className={styles.box1_2}>
-            <div>
-              <h1>Nombre</h1>
-              <h2>{getValueOrDefault(cancionenfila?.nombre)}</h2>
+          <div>
+              <h1>Cantante</h1>
+              <h2>{getValueOrDefault(cancionenfila?.cantante)}</h2>
             </div>
           </div>
         </div>
@@ -103,7 +116,7 @@ export function CancionesenfilaDetalles(props) {
             <FaCheck />
           </div>
         }
-        onConfirm={handleDeleteCliente}
+        onConfirm={handleDeleteCancion}
         onCancel={onOpenCloseConfirmDel}
         content='¿ Estas seguro de eliminar la canción ?'
       />

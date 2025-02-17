@@ -75,7 +75,7 @@ export function CancionesdisponiblesDetalles(props) {
           </div>
         </div>
         
-        <CancionesenfilaForm cancionData={cancionData} reload={reload} onReload={onReload} onOpenCloseDonar={onOpenCloseDonar} onToastSuccess={onToastSuccess} onCloseDetalles={onCloseDetalles} />
+        <CancionesenfilaForm user={user} cancionData={cancionData} reload={reload} onReload={onReload} onOpenCloseDonar={onOpenCloseDonar} onToastSuccess={onToastSuccess} onCloseDetalles={onCloseDetalles} />
 
       {user && user.nivel === 'admin' ?
         <>

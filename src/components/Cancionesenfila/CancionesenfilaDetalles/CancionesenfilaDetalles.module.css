@@ -29,6 +29,11 @@
   white-space: pre-line;
 }
 
+.box1_1 div:not(:last-child), .box1_2 div {
+  text-transform: capitalize;
+}
+
+
 .box1_1{
   padding-right: 10px;
   width: 50%;
@@ -39,8 +44,8 @@
   justify-content: flex-start;
 }
 
-.box1_1 div:nth-child(2){
-  margin-top: 10px;
+.box1_1 div:not(:first-child) {
+  margin-top: 20px;
 }
 
 .box1_2{

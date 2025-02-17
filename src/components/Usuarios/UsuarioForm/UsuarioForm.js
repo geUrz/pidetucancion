@@ -6,7 +6,7 @@ import { genUserId } from '@/helpers'
 import styles from './UsuarioForm.module.css'
 
 export function UsuarioForm(props) {
-  const { reload, onReload, onOpenCloseForm, onToastSuccess } = props;
+  const { user, reload, onReload, onOpenCloseForm, onToastSuccess } = props;
 
   const [errors, setErrors] = useState({});
   const [credentials, setCredentials] = useState({
@@ -73,6 +73,7 @@ export function UsuarioForm(props) {
     // Enviar datos al backend para crear el usuario
     try {
       await axios.post('/api/usuarios/usuarios', {
+        cantante_id: user.id,
         folio,
         nombre: credentials.nombre,
         usuario: credentials.usuario,

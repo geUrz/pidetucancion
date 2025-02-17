@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext'
 import { CancionesdisponiblesForm, CancionesdisponiblesLista, CancionesdisponiblesSearch, SearchCancionesdisponibles } from '@/components/Cancionesdisponibles'
 import { FaSearch } from 'react-icons/fa'
 import styles from './cancionesdisponibles.module.css'
+import ProtectedRoute from '@/components/Layouts/ProtectedRoute/ProtectedRoute'
 
 export default function Cancionesdisponibles() {
 
@@ -63,13 +64,22 @@ export default function Cancionesdisponibles() {
     }, 3000)
   }
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && Notification.permission !== "denied") {
+      // Solicitar permiso solo si no ha sido denegado
+      Notification.requestPermission().then(permission => {
+        console.log(permission);  // Asegúrate de que el permiso fue exitoso
+      });
+    }
+  }, []);
+
   if (loading) {
     return <Loading size={45} loading={0} />
   }
 
   return (
 
- 
+    <ProtectedRoute>
 
       <BasicLayout relative onReload={onReload}>
 
@@ -107,7 +117,7 @@ export default function Cancionesdisponibles() {
           <Add onOpenClose={onOpenCloseForm} /> : null
         }
 
-        <CancionesdisponiblesLista user={user} loading={loading} reload={reload} onReload={onReload} listadecanciones={listadecanciones} setListadecanciones={setListadecanciones}  onToastSuccessMod={onToastSuccessMod} onToastSuccess={onToastSuccess} onToastSuccessDel={onToastSuccessDel} />
+        <CancionesdisponiblesLista user={user} loading={loading} reload={reload} onReload={onReload} listadecanciones={listadecanciones} setListadecanciones={setListadecanciones} onToastSuccessMod={onToastSuccessMod} onToastSuccess={onToastSuccess} onToastSuccessDel={onToastSuccessDel} />
 
         <BasicModal title='crear canción' show={openCloseForm} onClose={onOpenCloseForm}>
           <CancionesdisponiblesForm reload={reload} onReload={onReload} onToastSuccess={onToastSuccess} onCloseForm={onOpenCloseForm} />
@@ -115,9 +125,9 @@ export default function Cancionesdisponibles() {
 
       </BasicLayout>
 
-      
 
- 
+    </ProtectedRoute>
+
 
   )
 }

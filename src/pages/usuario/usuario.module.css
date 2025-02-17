@@ -45,11 +45,13 @@
 .nombre h1{
   font-size: 24px;
   font-weight: 600 !important;
+  text-transform: capitalize;
   color: var(--clr2);
 }
 
 .nombre h2{
   font-size: 14px;
+  text-transform: capitalize;
 }
 
 .datos{

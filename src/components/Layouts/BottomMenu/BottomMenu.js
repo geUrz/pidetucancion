@@ -9,20 +9,20 @@ export function BottomMenu() {
   const { user } = useAuth()
 
   const [keyCode, setKeyCode] = useState(false)
-  
-    const handleKeyCode = (event) => {
-      if(event.ctrlKey && event.key === 'l') {
-        setKeyCode((prevState) => !prevState)
-      }
+
+  const handleKeyCode = (event) => {
+    if (event.ctrlKey && event.key === 'l') {
+      setKeyCode((prevState) => !prevState)
     }
-  
-    useEffect(() => {
-      window.addEventListener('keydown', handleKeyCode)
-  
-      return () => {
-        window.removeEventListener('keydown', handleKeyCode)
-      }
-    }, [])
+  }
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyCode)
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyCode)
+    }
+  }, [])
 
   return (
 
@@ -42,20 +42,12 @@ export function BottomMenu() {
         </Link>
 
         {user && user.nivel === 'admin' || keyCode ?
-          <>
-            <Link href='/usuarios' className={styles.tab}>
+          <Link href='/usuarios' className={styles.tab}>
             <div>
               <FaUsers />
               <h1>Usuarios</h1>
             </div>
-          </Link>
-          <Link href='/usuario' className={styles.tab}>
-            <div>
-              <FaUser />
-              <h1>Usuario</h1>
-            </div>
-          </Link>
-          </> : null
+          </Link> : null
         }
 
       </div>
