@@ -20,7 +20,7 @@ export const NotificationProvider = ({ children }) => {
         // Permiso concedido, mostrar la notificación
         const notification = new Notification(title, {
           body: body,
-          icon: '/path/to/icon.png',
+          icon: '/icons/icon-192x192.png',
         });
   
         notification.onclick = () => {
@@ -32,7 +32,7 @@ export const NotificationProvider = ({ children }) => {
           if (permission === "granted") {
             const notification = new Notification(title, {
               body: body,
-              icon: '/path/to/icon.png',
+              icon: '/icons/icon-192x192.png',
             });
   
             notification.onclick = () => {

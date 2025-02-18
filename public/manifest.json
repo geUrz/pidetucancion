@@ -1,7 +1,7 @@
 {
-  "short_name": "SingMeNow",
   "name": "SingMeNow",
-  "description": " SingMeNow es la app ideal para cantantes y compositores que desean organizar y crear listas de canciones de manera rápida y eficiente. Con nuestra interfaz simple y ágil, podrás diseñar y gestionar listas personalizadas de canciones, ya sea para tus próximos conciertos, grabaciones o simplemente para tu colección musical.",
+  "short_name": "Sing_Me_Now",
+  "description": "Una aplicación para crear peticiones de canciones personalizadas, con dedicatorias para que el cantante las vea y las ponga en lista para cantarlas.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",

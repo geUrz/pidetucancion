@@ -64,7 +64,7 @@ export function CancionesenfilaLista(props) {
       socket.off('cancionEliminada')
       socket.off('cancionesEliminadas')
     };
-  }, [socket])
+  }, [])
 
   const onOpenDetalles = (cancionenfila) => {
     setCancionenfilaSeleccionado(cancionenfila)

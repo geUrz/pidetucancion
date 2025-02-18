@@ -1,21 +1,18 @@
-
-import { AuthProvider, NotificationProvider, SocketProvider } from '@/contexts'
+import { useEffect } from 'react'
+import { AuthProvider, NotificationProvider } from '@/contexts'
 import 'semantic-ui-css/semantic.min.css'
 import '@/styles/globals.css'
 
 export default function App(props) {
-
   const { Component, pageProps } = props
 
-  return(
-  
+  return (
     <AuthProvider>
-      <SocketProvider>
+      {/* <SocketProvider> */}
         <NotificationProvider>
-      <Component {...pageProps} />
+          <Component {...pageProps} />
         </NotificationProvider>
-      </SocketProvider>
+      {/* </SocketProvider> */}
     </AuthProvider>
-
-  ) 
+  )
 }
