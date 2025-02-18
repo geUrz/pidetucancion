@@ -23,6 +23,7 @@ export function CancionesenfilaForm(props) {
 
   useEffect(() => {
     setIsClient(true)
+    console.log("isClient:", isClient)
   }, [])
 
   const crearCancion = async (e) => {
