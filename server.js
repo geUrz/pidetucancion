@@ -4,7 +4,7 @@ const socketIo = require('socket.io')
 const next = require('next')
 const path = require('path')
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
@@ -34,7 +34,7 @@ app.prepare().then(() => {
       
       // Enviar notificación a todos los clientes conectados
       io.emit('notification', { 
-        message: '¡Nueva canción agregada!', 
+        message: '¡ Nueva canción agregada !', 
         details: `Canción: ${cancion.cancion}` 
       })
 
@@ -75,7 +75,7 @@ app.prepare().then(() => {
 
   // Manejo de rutas de Next.js
   server.all('*', (req, res) => {
-    return handle(req, res)
+    return handle(req, res);
   })
 
   const PORT = process.env.PORT || 3004;

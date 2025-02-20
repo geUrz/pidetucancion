@@ -36,8 +36,6 @@ export function CancionesenfilaForm(props) {
 
       const cancionConId = res.data 
 
-      console.log('cancionConId:', cancionConId)
-
       if (socket) {
         socket.emit('nuevaCancion', cancionConId)
       }

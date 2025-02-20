@@ -22,8 +22,8 @@ export const NotificationProvider = ({ children }) => {
       setCanciones((prevCanciones) => [...prevCanciones, nuevaCancion]);
       // Activar la notificación cuando se agrega una nueva canción
       setShowNotification({
-        message: 'Nueva canción añadida',
-        details: nuevaCancion.nombre || 'Sin nombre',
+        message: '¡ Nueva canción agregada !',
+        details: `Canción: ${nuevaCancion.cancion}` || 'Sin nombre',
       });
       setHasNewNotification(true); // Activa el estado para mostrar el modal
     });
