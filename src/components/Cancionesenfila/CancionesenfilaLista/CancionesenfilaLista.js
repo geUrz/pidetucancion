@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Confirm, ListEmpty, Loading } from '@/components/Layouts'
 import { map, size } from 'lodash'
 import { BiMicrophone } from 'react-icons/bi'
@@ -9,26 +9,23 @@ import styles from './CancionesenfilaLista.module.css'
 import { FaCheck, FaTimes, FaTrash } from 'react-icons/fa'
 import axios from 'axios'
 
-import io from 'socket.io-client'
+import { useNotifications } from '@/contexts'
 
 export function CancionesenfilaLista(props) {
 
   const { user, reload, onReload, cancionesenfila, onToastSuccessDel } = props
+  const { socket } = useNotifications() // Accedemos al socket global del contexto
 
   const [showDetalles, setShowDetalles] = useState(false)
   const [cancionenfilaSeleccionado, setCancionenfilaSeleccionado] = useState(null)
   const [showLoading, setShowLoading] = useState(true)
-
   const [cancionesActualizadas, setCancionesActualizadas] = useState(cancionesenfila)
 
   useEffect(() => {
     setCancionesActualizadas(cancionesenfila)
-  }, [cancionesenfila])  
-
-  const socket = useMemo(() => io('http://localhost:3004'), [])
+  }, [cancionesenfila])
 
   useEffect(() => {
-  
     const fetchCanciones = async () => {
       try {
         const response = await fetch('/api/cancionesenfila/cancionesenfila')
@@ -39,10 +36,9 @@ export function CancionesenfilaLista(props) {
       }
     };
 
-    fetchCanciones()  
-    socket.emit('getCanciones') 
+    fetchCanciones()
+    socket.emit('getCanciones')
 
-    
     socket.on('nuevaCancion', (nuevaCancion) => {
       if (nuevaCancion && nuevaCancion.cancion && nuevaCancion.id) {
         setCancionesActualizadas((prevCanciones) => [...prevCanciones, nuevaCancion])
@@ -56,7 +52,7 @@ export function CancionesenfilaLista(props) {
     })
 
     socket.on('cancionesEliminadas', () => {
-      setCancionesActualizadas([]) 
+      setCancionesActualizadas([])
     })
 
     return () => {
@@ -64,7 +60,7 @@ export function CancionesenfilaLista(props) {
       socket.off('cancionEliminada')
       socket.off('cancionesEliminadas')
     };
-  }, [])
+  }, [socket])
 
   const onOpenDetalles = (cancionenfila) => {
     setCancionenfilaSeleccionado(cancionenfila)
@@ -87,7 +83,6 @@ export function CancionesenfilaLista(props) {
   const [micStates, setMicStates] = useState({})
 
   useEffect(() => {
-
     if (Array.isArray(cancionesActualizadas)) {
       const states = cancionesActualizadas.reduce((acc, cancion) => {
         const storedState = localStorage.getItem(`toggleMic_${cancion.id}`)
@@ -98,21 +93,14 @@ export function CancionesenfilaLista(props) {
     }
   }, [cancionesActualizadas])
 
-
-
   const handleToggleMic = (id, newState) => {
-    // Solo emitimos si el estado realmente cambió
     if (micStates[id] !== newState) {
-      // Actualizamos el estado en localStorage
       localStorage.setItem(`toggleMic_${id}`, JSON.stringify(newState))
-
-      // Actualizamos el estado local en el componente
       setMicStates((prevState) => ({
         ...prevState,
         [id]: newState,
       }))
 
-      // Emitimos el evento solo si el estado cambió
       if (socket) {
         socket.emit('cambiarEstadoMic', { id, estado: newState })
       }
@@ -122,8 +110,6 @@ export function CancionesenfilaLista(props) {
   useEffect(() => {
     socket.on('estadoMicActualizado', (data) => {
       const { id, estado } = data;
-
-      // Actualizamos el estado de micrófono para la canción que recibió el cambio
       setMicStates((prevState) => ({
         ...prevState,
         [id]: estado,
@@ -141,16 +127,12 @@ export function CancionesenfilaLista(props) {
 
   const deleteAllSongs = async () => {
     try {
-
       const res = await axios.delete(`/api/cancionesenfila/cancionesenfila`, {
         params: { usuario_id: user.id }
       })
 
       if (res.status === 200) {
-
         socket.emit('cancionesEliminadas')
-
-
         setCancionesActualizadas([])
         onToastSuccessDel()
         setShowConfirmDel(false)
@@ -160,11 +142,8 @@ export function CancionesenfilaLista(props) {
     }
   };
 
-
   return (
-
     <>
-
       {showLoading ? (
         <Loading size={45} loading={1} />
       ) : (
@@ -175,7 +154,7 @@ export function CancionesenfilaLista(props) {
             <div className={styles.section}>
               {map(cancionesActualizadas, (cancionenfila) => (
                 <div key={cancionenfila.id}
-                  className={micStates[cancionenfila.id] ? `${styles.boxToggle}` : `${styles.box}`} onClick={() => onOpenDetalles(cancionenfila)}>
+                  className={micStates[cancionenfila.id] ? `${styles.boxToggle}` : `${styles.box}`} onClick={() => onOpenDetalles(cancionenfila)} >
                   <div>
                     <div className={styles.column1}>
                       <BiMicrophone />
@@ -204,7 +183,6 @@ export function CancionesenfilaLista(props) {
                 </div>
               </div>
             }
-
           </div>
         )
       )}
@@ -229,8 +207,6 @@ export function CancionesenfilaLista(props) {
         onCancel={onOpenCloseConfirmDel}
         content='¿ Estas seguro de eliminar todas las canciones ?'
       />
-
     </>
-
   )
 }

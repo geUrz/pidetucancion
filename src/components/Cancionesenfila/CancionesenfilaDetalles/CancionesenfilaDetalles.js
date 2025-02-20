@@ -5,14 +5,13 @@ import axios from 'axios'
 import { getValueOrDefault } from '@/helpers'
 import styles from './CancionesenfilaDetalles.module.css'
 
-import { useSocket } from '@/contexts/SocketContext'
-
+import { useNotifications } from '@/contexts'
 
 export function CancionesenfilaDetalles(props) {
 
   const { user, reload, onReload, cancionenfila, onCloseDetalles, onToastSuccessDel, handleToggleMic, micState } = props
 
-  const socket = useSocket()
+  const { socket } = useNotifications()
 
   const [showConfirmDel, setShowConfirmDel] = useState(false)
 

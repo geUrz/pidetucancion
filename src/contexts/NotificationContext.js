@@ -1,58 +1,49 @@
-// contexts/NotificationContext.js
-import { useRouter } from 'next/router';
-import { createContext, useState, useContext } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
+import io from 'socket.io-client';
 
-const NotificationContext = createContext();
+const NotificationContext = createContext()
 
-export const useNotification = () => {
-  return useContext(NotificationContext);
-}
+const socket = io('http://localhost:3004') // Asegúrate de que la URL sea correcta
 
 export const NotificationProvider = ({ children }) => {
-
-  const route = useRouter()
-
   const [notifications, setNotifications] = useState([]);
+  const [showNotification, setShowNotification] = useState(null);
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+  const [canciones, setCanciones] = useState([]);
 
-  const showNotification = (title, body) => {
-    if (typeof window !== "undefined") {
-      if (Notification.permission === "granted") {
-        // Permiso concedido, mostrar la notificación
-        const notification = new Notification(title, {
-          body: body,
-          icon: '/icons/icon-192x192.png',
-        });
-  
-        notification.onclick = () => {
-          route.push('/cancionesenfila');
-        };
-      } else if (Notification.permission !== "denied") {
-        // Si el permiso no está denegado, solicita permiso
-        Notification.requestPermission().then(permission => {
-          if (permission === "granted") {
-            const notification = new Notification(title, {
-              body: body,
-              icon: '/icons/icon-192x192.png',
-            });
-  
-            notification.onclick = () => {
-              route.push('/cancionesenfila');
-            };
-          }
-        });
-      }
-    }
-  
-    // Agregar notificación al estado (si deseas manejarla en el estado también)
-    setNotifications(prevNotifications => [
-      ...prevNotifications,
-      { title, body }
-    ]);
-  }
+  useEffect(() => {
+    // Escuchar eventos de notificaciones y canciones
+    socket.on('notification', (data) => {
+      setShowNotification({ message: data.message, details: data.details });
+      setHasNewNotification(true);
+    });
+
+    socket.on('nuevaCancion', (nuevaCancion) => {
+      setCanciones((prevCanciones) => [...prevCanciones, nuevaCancion]);
+      // Activar la notificación cuando se agrega una nueva canción
+      setShowNotification({
+        message: 'Nueva canción añadida',
+        details: nuevaCancion.nombre || 'Sin nombre',
+      });
+      setHasNewNotification(true); // Activa el estado para mostrar el modal
+    });
+
+    return () => {
+      socket.off('notification');
+      socket.off('nuevaCancion');
+    };
+  }, []);
+
+  const resetNotification = () => {
+    setShowNotification(null);
+    setHasNewNotification(false);
+  };
 
   return (
-    <NotificationContext.Provider value={{ showNotification }}>
+    <NotificationContext.Provider value={{ notifications, showNotification, hasNewNotification, canciones, socket, resetNotification }}>
       {children}
     </NotificationContext.Provider>
   );
-}
+};
+
+export const useNotifications = () => useContext(NotificationContext);

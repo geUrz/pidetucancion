@@ -4,27 +4,17 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import styles from './CancionesenfilaForm.module.css'
 
-import { useSocket } from '@/contexts/SocketContext' 
-import { useNotification } from '@/contexts'
+import { useNotifications } from '@/contexts'
 
 export function CancionesenfilaForm(props) {
 
   const { user, reload, onReload, cancionData, onOpenCloseDonar, onToastSuccess, onCloseDetalles } = props
 
-  const { showNotification } = useNotification()
+  const { socket } = useNotifications()
 
   const [nombre, setNombre] = useState('')
   const [mensaje, setMensaje] = useState('')
   const [mensajeLength, setMensajeLength] = useState(0)
-
-  const socket = useSocket()
-
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-    console.log("isClient:", isClient)
-  }, [])
 
   const crearCancion = async (e) => {
     e.preventDefault()
@@ -46,12 +36,10 @@ export function CancionesenfilaForm(props) {
 
       const cancionConId = res.data 
 
+      console.log('cancionConId:', cancionConId)
+
       if (socket) {
         socket.emit('nuevaCancion', cancionConId)
-      }
-
-      if (isClient) {
-        showNotification('¡Nueva canción agregada!', `Canción: ${cancionConId.cancion}`)
       }
 
       setNombre('')
