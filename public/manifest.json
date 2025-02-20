@@ -2,7 +2,7 @@
   "name": "SingMeNow",
   "short_name": "SingMeNow",
   "description": "Una aplicación para crear peticiones de canciones personalizadas, con dedicatorias para que el cantante las vea y las ponga en lista para cantarlas.",
-  "start_url": "/singmenow",
+  "start_url": "/join/signin",
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
