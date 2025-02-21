@@ -3,7 +3,11 @@ import io from 'socket.io-client';
 
 const NotificationContext = createContext()
 
-const socket = io('http://localhost:3004')
+const socket = io(
+  process.env.NODE_ENV === 'production'
+    ? 'wss://clicknetcontrol.com:8084'  // Usar wss:// en producción para WebSocket seguro
+    : 'http://localhost:3004'           // Usar http:// en desarrollo
+);
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);

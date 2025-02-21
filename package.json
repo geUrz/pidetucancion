@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3004",
     "build": "next build",
-    "start": "node server.js"
+    "start": "set NODE_ENV=production && node server.js"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.1.1",
