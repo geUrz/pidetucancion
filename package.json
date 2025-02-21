@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 3004",
     "build": "next build",
-    "start": "set NODE_ENV=production && node server.js"
+    "start": "cross-env NODE_ENV=production node server.js"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^3.1.1",
@@ -35,5 +35,8 @@
     "stripe": "^17.6.0",
     "workbox-core": "^7.3.0",
     "workbox-window": "^7.3.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
