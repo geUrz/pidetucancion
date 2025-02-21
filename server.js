@@ -78,7 +78,7 @@ app.prepare().then(() => {
     return handle(req, res);
   })
 
-  const PORT = process.env.PORT || (process.env.NODE_ENV === 'production' ? 8084 : 3004);
+  const PORT = 3004
 
 console.log('NODE_ENV:', process.env.NODE_ENV);
 
