@@ -64,15 +64,6 @@ export default function Cancionesdisponibles() {
     }, 3000)
   }
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && Notification.permission !== "denied") {
-      // Solicitar permiso solo si no ha sido denegado
-      Notification.requestPermission().then(permission => {
-        console.log(permission)
-      })
-    }
-  }, [])
-
   if (loading) {
     return <Loading size={45} loading={0} />
   }
