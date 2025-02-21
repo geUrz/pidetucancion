@@ -3,6 +3,8 @@ import io from 'socket.io-client';
 
 const NotificationContext = createContext()
 
+console.log('NODE_ENV:', process.env.NODE_ENV)
+
 const socket = io(
   process.env.NODE_ENV === 'production' 
     ? 'https://clicknetcontrol.com:8084' 
