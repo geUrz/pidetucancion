@@ -79,8 +79,9 @@ app.prepare().then(() => {
   })
 
   const PORT = process.env.PORT || 3004;
-  httpServer.listen(PORT, (err) => {
+  httpServer.listen(PORT, '0.0.0.0', (err) => {  // Escuchar en todas las interfaces de red
     if (err) throw err;
-    console.log(`> Ready on http://localhost:${PORT}`)
-  })
+    console.log(`> Ready on http://localhost:${PORT}`);
+  });
+  
 })
