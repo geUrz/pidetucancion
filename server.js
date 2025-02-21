@@ -20,10 +20,12 @@ app.prepare().then(() => {
   // Configurar Socket.IO
   const io = socketIo(httpServer, {
     cors: {
-      origin: '*', // Permitir solicitudes desde cualquier origen
+      origin: process.env.NODE_ENV === 'production' 
+        ? 'https://clicknetcontrol.com'  // Permitir solo acceso de tu dominio en producción
+        : '*',                           // Permitir todo en desarrollo
       methods: ['GET', 'POST'],
     },
-  })
+  });  
 
   io.on('connection', (socket) => {
     console.log(`Usuario conectado: ${socket.id}`)
@@ -78,10 +80,9 @@ app.prepare().then(() => {
     return handle(req, res);
   })
 
-  const PORT = process.env.PORT || 3004;
+  const PORT = process.env.PORT || (dev ? 3004 : 8084)
   httpServer.listen(PORT, '0.0.0.0', (err) => {  // Escuchar en todas las interfaces de red
     if (err) throw err;
     console.log(`> Ready on http://localhost:${PORT}`);
   });
-  
 })

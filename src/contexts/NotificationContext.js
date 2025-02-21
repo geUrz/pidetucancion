@@ -3,7 +3,14 @@ import io from 'socket.io-client';
 
 const NotificationContext = createContext()
 
-const socket = io('http://localhost:3004')
+console.log(process.env.NODE_ENV)
+
+const socket = io(
+  process.env.NODE_ENV === 'production'
+    ? 'https://clicknetcontrol.com:8084'  // En producción
+    : 'http://localhost:3004'             // En desarrollo
+);
+
 
 export const NotificationProvider = ({ children }) => {
   const [notifications, setNotifications] = useState([]);
